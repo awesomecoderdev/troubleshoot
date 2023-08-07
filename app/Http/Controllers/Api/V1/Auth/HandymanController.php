@@ -22,11 +22,14 @@ class HandymanController extends Controller
     public function register(StoreHandymanRequest $request)
     {
         try {
+
             $handyman = Handyman::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
+                'address' => $request->address,
                 'password' => Hash::make($request->password),
+                'provider_id' => 1,
             ]);
 
             event(new RegisteredHandyman($handyman));

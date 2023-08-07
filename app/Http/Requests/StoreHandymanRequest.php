@@ -34,6 +34,7 @@ class StoreHandymanRequest extends FormRequest
             'password' => 'required|string|min:6|max:10',
             // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'address' => 'required',
+            // 'provider_id' => 'required',
         ];
     }
 
