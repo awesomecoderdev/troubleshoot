@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\UpdateCustomerRequest;
-use App\Models\Customer;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreHandymanRequest;
+use App\Http\Requests\UpdateHandymanRequest;
+use App\Models\Handyman;
 
-class CustomerController extends Controller
+class HandymanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +28,7 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCustomerRequest $request)
+    public function store(StoreHandymanRequest $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer)
+    public function show(Handyman $handyman)
     {
         //
     }
@@ -43,7 +44,7 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Customer $customer)
+    public function edit(Handyman $handyman)
     {
         //
     }
@@ -51,7 +52,7 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCustomerRequest $request, Customer $customer)
+    public function update(UpdateHandymanRequest $request, Handyman $handyman)
     {
         //
     }
@@ -59,7 +60,7 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy(Handyman $handyman)
     {
         //
     }

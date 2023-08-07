@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\StoreProviderRequest;
-use App\Http\Requests\UpdateProviderRequest;
-use App\Models\Provider;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreScheduleRequest;
+use App\Http\Requests\UpdateScheduleRequest;
+use App\Models\Schedule;
 
-class ProviderController extends Controller
+class ScheduleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +28,7 @@ class ProviderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProviderRequest $request)
+    public function store(StoreScheduleRequest $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class ProviderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Provider $provider)
+    public function show(Schedule $schedule)
     {
         //
     }
@@ -43,7 +44,7 @@ class ProviderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Provider $provider)
+    public function edit(Schedule $schedule)
     {
         //
     }
@@ -51,7 +52,7 @@ class ProviderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProviderRequest $request, Provider $provider)
+    public function update(UpdateScheduleRequest $request, Schedule $schedule)
     {
         //
     }
@@ -59,7 +60,7 @@ class ProviderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Provider $provider)
+    public function destroy(Schedule $schedule)
     {
         //
     }

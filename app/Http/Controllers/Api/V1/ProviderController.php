@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\StoreCampaignRequest;
-use App\Http\Requests\UpdateCampaignRequest;
-use App\Models\Campaign;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProviderRequest;
+use App\Http\Requests\UpdateProviderRequest;
+use App\Models\Provider;
 
-class CampaignController extends Controller
+class ProviderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +28,7 @@ class CampaignController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCampaignRequest $request)
+    public function store(StoreProviderRequest $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class CampaignController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Campaign $campaign)
+    public function show(Provider $provider)
     {
         //
     }
@@ -43,7 +44,7 @@ class CampaignController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Campaign $campaign)
+    public function edit(Provider $provider)
     {
         //
     }
@@ -51,7 +52,7 @@ class CampaignController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCampaignRequest $request, Campaign $campaign)
+    public function update(UpdateProviderRequest $request, Provider $provider)
     {
         //
     }
@@ -59,7 +60,7 @@ class CampaignController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Campaign $campaign)
+    public function destroy(Provider $provider)
     {
         //
     }
