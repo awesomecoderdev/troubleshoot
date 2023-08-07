@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Auth\CustomerController;
+use App\Http\Controllers\Api\V1\Auth\HandymanController;
+use App\Http\Controllers\Api\V1\Auth\UserController;
 use App\Http\Controllers\Api\V1\CsrfTokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,9 +22,31 @@ use Illuminate\Support\Facades\Route;
 Route::any('/refresh-csrf', [CsrfTokenController::class, 'refresh'])->name('csrf.refresh');
 
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Guest routes
+Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
+
+    // Users Routes
+    // Route::group(['prefix' => 'user', 'as' => 'user', "controller" => UserController::class], function () {
+    //     Route::post('/register', 'register')->name("register");
+    // });
+
+    // Customer Routes
+    Route::group(['prefix' => 'customer', 'as' => 'customer', "controller" => CustomerController::class], function () {
+        Route::post('/register', 'register')->name("register");
+    });
+
+    // Handyman Routes
+    Route::group(['prefix' => 'handyman', 'as' => 'handyman', "controller" => HandymanController::class], function () {
+        Route::post('/register', 'register')->name("register");
+    });
 });
+
+
+
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::any('/', function (Request $request) {
     return response()->json([

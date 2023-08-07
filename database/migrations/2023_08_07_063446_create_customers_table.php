@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string("phone", 15)->unique();
             $table->boolean('phone_verify')->default(false);
-            $table->string("ref")->nullable();
+            $table->string("ref")->unique()->nullable();
             $table->integer("otp");
             $table->string("image")->nullable();
             $table->boolean('status')->default(false);
