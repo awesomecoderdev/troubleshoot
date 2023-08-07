@@ -2,7 +2,14 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Response as HTTP;
+use Illuminate\Support\Facades\Response;
+
 
 class StoreCampaignRequest extends FormRequest
 {
@@ -24,5 +31,19 @@ class StoreCampaignRequest extends FormRequest
         return [
             //
         ];
+    }
+
+
+    /**
+     * @throws \HttpResponseException When the validation rules is not valid
+     */
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(Response::json([
+            'success'   => false,
+            'status' => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+            'message'   => 'Validation failed.',
+            'error'     => $validator->errors(),
+        ], HTTP::HTTP_UNPROCESSABLE_ENTITY)); // HTTP::HTTP_OK);
     }
 }

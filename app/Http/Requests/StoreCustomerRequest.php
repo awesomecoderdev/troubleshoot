@@ -7,6 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Response as HTTP;
+use Illuminate\Support\Facades\Response;
 
 class StoreCustomerRequest extends FormRequest
 {
@@ -25,13 +27,12 @@ class StoreCustomerRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
         return [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
             'phone' => ['required', 'string', Rule::unique('customers')],
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:6|max:10',
             // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'boolean', // Validate status field
         ];
@@ -74,11 +75,11 @@ class StoreCustomerRequest extends FormRequest
      */
     public function failedValidation(Validator $validator)
     {
-
-        throw new HttpResponseException(response()->json([
+        throw new HttpResponseException(Response::json([
             'success'   => false,
+            'status' => HTTP::HTTP_UNPROCESSABLE_ENTITY,
             'message'   => 'Validation failed.',
             'error'     => $validator->errors(),
-        ]));
+        ], HTTP::HTTP_UNPROCESSABLE_ENTITY)); // HTTP::HTTP_OK);
     }
 }
