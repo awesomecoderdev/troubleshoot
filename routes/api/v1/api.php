@@ -18,8 +18,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/', function () {
+Route::any('/', function (Request $request) {
     return response()->json([
         "status" => "Hello world",
+        "request" => $request->all(),
     ]);
 });
