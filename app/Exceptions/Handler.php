@@ -46,7 +46,7 @@ class Handler extends ExceptionHandler
         if (Str::startsWith($request->path(), 'api')) {
 
             // $status = method_exists(Throwable::class, 'getStatusCode') ? $e->getStatusCode() : 404;
-            $status = HTTP::HTTP_OK;
+            $status = HTTP::HTTP_NOT_FOUND;
             return Response::json([
                 'success'   => false,
                 'status'    => $status,
