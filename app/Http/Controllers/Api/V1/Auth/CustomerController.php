@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Models\Customer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Events\RegisteredCustomer;
 use Illuminate\Http\Response as HTTP;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\CustomerLoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\Api\V1\CustomerLoginRequest;
 
 class CustomerController extends Controller
 {
@@ -29,6 +32,121 @@ class CustomerController extends Controller
                 'message'   => "Customer successfully authorized.",
                 'request'   => $request->user('customers')
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+    /**
+     * Validate OTP.
+     */
+    public function validateOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            // 'phone' => 'required|string|min:10|max:15',
+            'phone' => [
+                'required', 'string', "min:10", "max:15",
+                Rule::exists('customers', 'phone'),
+            ],
+            'otp' => 'required|numeric',
+        ], [
+            'phone.exists' => 'Customer not found.',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'error' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        try {
+            // Find the customer by email
+            $customer = Customer::where('phone', $request->phone)->first();
+
+            // Check if the provided OTP matches the stored OTP
+            if ($customer->otp != $request->otp) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_UNAUTHORIZED,
+                    'message'   => "OTP didn't matched.",
+                    'error'     => "Invalid OTP."
+                ],  HTTP::HTTP_UNAUTHORIZED); // HTTP::HTTP_OK
+            }
+
+            // If the OTP matches, update the phone_verify field to 1
+            $customer->phone_verify = true;
+            $customer->otp = null;
+            $customer->save();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Phone number verified successfully.",
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+    /**
+     * Regenerate OTP.
+     */
+    public function regenerateOTP(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            // 'phone' => 'required|string|min:10|max:15',
+            'phone' => [
+                'required', 'string', "min:10", "max:15",
+                Rule::exists('customers', 'phone'),
+            ],
+        ], [
+            'phone.exists' => 'Customer not found.',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'error' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        try {
+            // Find the customer by phone number
+            $customer = Customer::where('phone', $request->phone)->first();
+
+            if ($customer->phone_verify) {
+                return Response::json([
+                    'success'   => true,
+                    'status'    => HTTP::HTTP_OK,
+                    'message'   => "Phone number is already verified.",
+                ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+            }
+            // Generate a new 4-digit random OTP
+            $otp = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+
+            // Update the customer's OTP in the database
+            $customer->otp = $otp;
+            $customer->save();
+
+            // SMS service for sending OTPs to the phone
+            $this->sendOtpToPhone($customer->phone, $otp);
         } catch (\Exception $e) {
             //throw $e;
             return Response::json([
@@ -186,5 +304,45 @@ class CustomerController extends Controller
             $ref_code .= rand(0, 9);
         }
         return $ref_code;
+    }
+
+    /**
+     * Generate a unique ref code for customer.
+     */
+    private function sendOtpToPhone($phone, $otp, $ttl = 1)
+    {
+        if (!Cache::has("$phone")) {
+            try {
+                Cache::remember("$phone", 60 * $ttl, function () { // disabled for 2 minutes
+                    return true;
+                });
+
+                // send otp here
+
+                // start::sending otp
+                // do api call to otp
+                // end::sending otp
+
+                return Response::json([
+                    "success" => true,
+                    'status'  => HTTP::HTTP_OK,
+                    "message" => "We have sent OTP successfully.",
+                ], HTTP::HTTP_OK);
+            } catch (\Exception $e) {
+                //throw $e;
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    "message" => 'Something went wrong. Please try again after few min.',
+                    // 'err' => $e->getMessage(),
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+        }
+
+        return Response::json([
+            "success" => false,
+            'status'  => HTTP::HTTP_BAD_REQUEST,
+            "message" => "Please try again after $ttl min.",
+        ], HTTP::HTTP_OK);
     }
 }
