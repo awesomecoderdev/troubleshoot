@@ -46,6 +46,38 @@ class ProviderController extends Controller
 
 
     /**
+     * Logout provider.
+     */
+    public function logout(Request $request)
+    {
+        try {
+            if ($request->user('providers')) {
+                $request->user('providers')->tokens()->delete();
+                return Response::json([
+                    'success'   => true,
+                    'status'    => HTTP::HTTP_OK,
+                    'message'   => "Logged out successfully.",
+                ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+            } else {
+                return Response::json([
+                    'success'   => true,
+                    'status'    => HTTP::HTTP_OK,
+                    'message'   => "You have already logged out.",
+                ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+            }
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+
+    /**
      * Crete a newly created providers in database.
      */
     public function login(ProviderLoginRequest $request)

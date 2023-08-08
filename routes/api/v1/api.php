@@ -42,6 +42,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         // authorization route
         Route::middleware(['customer'])->group(function () {
             Route::get('/', 'customer')->name("customer");
+            Route::post('/logout', 'logout')->name("logout");
         });
     });
 
@@ -56,9 +57,9 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         // authorization route
         Route::middleware(['handyman'])->group(function () {
             Route::get('/', 'handyman')->name("handyman");
+            Route::post('/logout', 'logout')->name("logout");
         });
     });
-
 
     // Provider Routes
     Route::group(['prefix' => 'provider', 'as' => 'provider', "controller" => ProviderController::class], function () {
@@ -71,6 +72,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         // authorization route
         Route::middleware(['provider'])->group(function () {
             Route::get('/', 'provider')->name("provider");
+            Route::post('/logout', 'logout')->name("logout");
         });
     });
 });
