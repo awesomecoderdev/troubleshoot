@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+
 use DateTimeInterface;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Provider extends Authenticatable
 {
@@ -20,16 +23,31 @@ class Provider extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        "zone_id",
+        "company_name",
         "first_name",
         "last_name",
         "email",
         "password",
         "phone",
-        "phone_verify",
-        "ref",
-        "otp",
+        "identity_number",
+        "contact_person_name",
+        "contact_person_phone",
+        "account_email",
         "image",
-        "status",
+        "identity_image",
+        "order_count",
+        "service_man_count",
+        "service_capacity_per_day",
+        "rating_count",
+        "avg_rating",
+        "commission_status",
+        "commission_percentage",
+        "is_active",
+        "is_approved",
+        "start",
+        "end",
+        "off_day",
     ];
 
     /**
@@ -48,7 +66,23 @@ class Provider extends Authenticatable
      */
     protected $casts = [
         'password' => 'hashed',
+        'identity_image' => AsCollection::class,
+        'off_day' => AsCollection::class,
     ];
+
+    /**
+     * Interact with the user's first name.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    // protected function meta(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => Collection::make($value),
+    //         set: fn ($value) => strtolower($value),
+    //     );
+    // }
+
 
 
     /**

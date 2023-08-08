@@ -28,13 +28,33 @@ class StoreProviderRequest extends FormRequest
     public function rules()
     {
         return [
+            'zone_id' => 'required|integer',
+            'company_name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
-            'phone' => ['required', 'string', Rule::unique('customers')],
+            'company_name' => 'required|string|max:255',
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('providers')], //unique:users,email
+            'phone' => ['required', 'string', "min:10", "max:15", Rule::unique('providers')],
             'password' => 'required|string|min:6|max:10',
+            "identity_number" => "required",
+            "contact_person_name" => 'required|string|max:255',
+            "contact_person_phone" => "required|string|min:10|max:15",
+            "account_email" => "required|email",
             // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'boolean', // Validate status field
+            // "identity_image" => "required",
+            // "order_count" => "required",
+            "service_man_count" => "required|integer",
+            "service_capacity_per_day" => "required|integer",
+            // "rating_count" => "required",
+            // "avg_rating" => "required",
+            "commission_status" => "boolean",
+            // "commission_percentage" => "required",
+            // "is_active" => "required",
+            // "is_approved" => "required",
+            "start" => "required",
+            "end" => "required",
+            "off_day" => "required",
+            // 'status' => 'boolean', // Validate status field
         ];
     }
 

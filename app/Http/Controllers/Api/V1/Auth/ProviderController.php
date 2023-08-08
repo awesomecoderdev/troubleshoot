@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Models\Provider;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Events\RegisteredCustomer;
 use App\Events\RegisteredProvider;
 use Illuminate\Http\Response as HTTP;
 use App\Http\Controllers\Controller;
@@ -15,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 use App\Http\Requests\StoreProviderRequest;
+use Carbon\Carbon;
 
 class ProviderController extends Controller
 {
@@ -22,7 +22,7 @@ class ProviderController extends Controller
     /**
      * Retrieve providers info.
      */
-    public function providers(Request $request)
+    public function provider(Request $request)
     {
         try {
             return Response::json([
@@ -81,7 +81,6 @@ class ProviderController extends Controller
                     'error' => 'Phone is not verified.'
                 ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
             }
-            // $request->user('providers')->tokens()->delete();
 
             $provider->tokens()->delete();
             $token = $provider->createToken('authToken')->plainTextToken;
@@ -109,18 +108,32 @@ class ProviderController extends Controller
     public function register(StoreProviderRequest $request)
     {
         try {
-            // If the user is not registered, proceed with registration
-            $otp = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
-
             $provider = Provider::create([
+                "zone_id" => $request->zone_id,
+                "company_name" => $request->company_name,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
-                'phone' => $request->phone,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'status' => $request->input("status", false),
-                'ref' => $this->generateUniqueRefCode($request->phone),
-                'otp' => $otp, // Save the generated OTP
+                'phone' => $request->phone,
+                "identity_number" => $request->identity_number,
+                "contact_person_name" => $request->contact_person_name,
+                "contact_person_phone" => $request->contact_person_phone,
+                "account_email" => $request->account_email,
+                // "image" => $request->image,
+                // "identity_image" => [$request->identity_image],
+                // "order_count" => $request->order_count,
+                "service_man_count" => $request->service_man_count,
+                "service_capacity_per_day" => $request->service_capacity_per_day,
+                // "rating_count" => $request->rating_count,
+                // "avg_rating" => $request->avg_rating,
+                // "commission_status" => $request->commission_status,
+                // "commission_percentage" => $request->input('commission_percentage', 0),
+                // "is_active" => $request->is_active,
+                // "is_approved" => $request->is_approved,
+                "start" => Carbon::parse($request->start),
+                "end" => Carbon::parse($request->end),
+                "off_day" => [$request->off_day],
             ]);
 
             event(new RegisteredProvider($provider));
@@ -136,7 +149,7 @@ class ProviderController extends Controller
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_CREATED,
-                'message'   => "Customer registered successfully.",
+                'message'   => "Provider registered successfully.",
             ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
@@ -147,18 +160,5 @@ class ProviderController extends Controller
                 'err' => $e->getMessage(),
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
-    }
-
-    /**
-     * Generate a unique ref code for customer.
-     */
-    private function generateUniqueRefCode($ref)
-    {
-        $ref_code = substr($ref, 3); // Generate a 10-character random string in uppercase
-        while (Provider::where('ref', $ref_code)->exists()) {
-            // Check if the generated code already exists in the database
-            $ref_code .= rand(0, 9);
-        }
-        return $ref_code;
     }
 }
