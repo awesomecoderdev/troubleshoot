@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Crete a newly created user in database.
      */
     public function register(StoreUserRequest $request)
     {

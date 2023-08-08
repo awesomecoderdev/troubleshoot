@@ -40,6 +40,16 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'customers' => [
+            'driver' => 'sanctum',
+            'provider' => 'customers',
+            'hash' => false,
+        ],
+        'handymans' => [
+            'driver' => 'sanctum',
+            'provider' => 'handymans',
+            'hash' => false,
+        ],
     ],
 
     /*
@@ -64,7 +74,14 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
+        'customers' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\Customer::class,
+        ],
+        'handymans' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\Handyman::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

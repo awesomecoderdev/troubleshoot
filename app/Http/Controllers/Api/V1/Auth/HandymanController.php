@@ -15,9 +15,7 @@ use App\Http\Requests\StoreHandymanRequest;
 class HandymanController extends Controller
 {
     /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Crete a newly created Handyman in database.
      */
     public function register(StoreHandymanRequest $request)
     {

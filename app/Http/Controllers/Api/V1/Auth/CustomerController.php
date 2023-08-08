@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Events\RegisteredCustomer;
 use Illuminate\Http\Response as HTTP;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\CustomerLoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
@@ -15,10 +16,91 @@ use App\Http\Requests\StoreCustomerRequest;
 
 class CustomerController extends Controller
 {
+
     /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Retrieve customer info.
+     */
+    public function customer(Request $request)
+    {
+        try {
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Customer successfully authorized.",
+                'request'   => $request->user('customers')
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+
+    /**
+     * Crete a newly created customer in database.
+     */
+    public function login(CustomerLoginRequest $request)
+    {
+        $loginField = $request->input('login_field');
+        $password = $request->input('password');
+
+        try {
+            $credentials = [];
+            if (filter_var($loginField, FILTER_VALIDATE_EMAIL)) {
+                // The input is an email
+                $credentials['email'] = $loginField;
+            } else {
+                // The input is a phone number
+                $credentials['phone'] = $loginField;
+            }
+
+            $customer = Customer::where($credentials)->first();
+
+            if (!$customer || !Hash::check($password, $customer->password)) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_UNAUTHORIZED,
+                    'message'   => "Unauthenticated customer credentials.",
+                    'error' => 'Invalid credentials.'
+                ],  HTTP::HTTP_UNAUTHORIZED); // HTTP::HTTP_OK
+            }
+            if ($customer->phone_verify === 0) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "Customer phone is not verified.",
+                    'error' => 'Phone is not verified.'
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+            // $request->user('customers')->tokens()->delete();
+
+            $customer->tokens()->delete();
+            $token = $customer->createToken('authToken')->plainTextToken;
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Customer successfully authorized.",
+                'token' => $token
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+    /**
+     * Crete a newly created customer in database.
      */
     public function register(StoreCustomerRequest $request)
     {
@@ -63,7 +145,9 @@ class CustomerController extends Controller
         }
     }
 
-
+    /**
+     * Generate a unique ref code for customer.
+     */
     private function generateUniqueRefCode($ref)
     {
         $ref_code = substr($ref, 3); // Generate a 10-character random string in uppercase

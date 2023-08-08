@@ -32,7 +32,16 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
     // Customer Routes
     Route::group(['prefix' => 'customer', 'as' => 'customer', "controller" => CustomerController::class], function () {
-        Route::post('/register', 'register')->name("register");
+        // guest route
+        Route::middleware(['customer:false'])->group(function () {
+            Route::post('/login', 'login')->name("login");
+            Route::post('/register', 'register')->name("register");
+        });
+
+        // authorization route
+        Route::middleware(['customer'])->group(function () {
+            Route::get('/', 'customer')->name("customer");
+        });
     });
 
     // Handyman Routes
