@@ -43,6 +43,8 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         Route::middleware(['customer'])->group(function () {
             Route::get('/', 'customer')->name("customer");
             Route::post('/logout', 'logout')->name("logout");
+            Route::post('/update', 'update')->name("update");
+            Route::post('/delete', 'delete')->name("delete");
 
             // otp routes
             Route::post('/check-otp', 'validateOtp');

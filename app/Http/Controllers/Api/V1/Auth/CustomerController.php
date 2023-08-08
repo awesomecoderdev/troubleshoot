@@ -3,20 +3,24 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Models\Customer;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Events\RegisteredCustomer;
-use Illuminate\Http\Response as HTTP;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Cache;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\Api\V1\CustomerLoginRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\Api\V1\CustomerResource;
+use App\Http\Requests\Api\V1\CustomerLoginRequest;
 
 class CustomerController extends Controller
 {
@@ -297,6 +301,110 @@ class CustomerController extends Controller
                 'status'    => HTTP::HTTP_CREATED,
                 'message'   => "Customer registered successfully.",
             ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                // 'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+
+    /**
+     * Update customer data database.
+     */
+    public function update(UpdateCustomerRequest $request)
+    {
+        // get customer
+        $customer = $request->user('customers');
+
+        $credentials = Arr::only($request->all(), [
+            'first_name',
+            'last_name',
+            'email',
+            'image',
+        ]);
+
+        // Handle image upload and update
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = "$customer->id." . $image->getClientOriginalExtension();
+            $imagePath = "public/images/$imageName";
+
+            // Create the "public/images" directory if it doesn't exist
+            if (!Storage::exists('public/images')) {
+                Storage::makeDirectory('public/images');
+            }
+
+            // Save the image to the specified path
+            Image::make($image)->resize(200, 200)->save(storage_path("app/$imagePath"));
+            $credentials['image'] = $imageName;
+        }
+
+        // Update the customer data
+        $customer->update($credentials);
+
+        try {
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Profile updated successfully.",
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                // 'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+
+    /**
+     * Delete customer from database.
+     */
+    public function delete(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'error' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        // get customer
+        $customer = $request->user('customers');
+
+        try {
+            // Verify the provided password
+            if (password_verify($request->password, $customer->password)) {
+                // Delete the account from the database
+                $customer->tokens()->delete();
+                $customer->delete();
+            } else {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                    'message'   => "Invalid password. Please try again.",
+                ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+            }
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_ACCEPTED,
+                'message'   => "Account deleted successfully.",
+            ],  HTTP::HTTP_ACCEPTED); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
             return Response::json([

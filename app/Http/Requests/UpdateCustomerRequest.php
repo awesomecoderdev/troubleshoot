@@ -15,10 +15,10 @@ class UpdateCustomerRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
-    {
-        return false;
-    }
+    // public function authorize(): bool
+    // {
+    //     return false;
+    // }
 
     /**
      * Get the validation rules that apply to the request.
@@ -27,14 +27,15 @@ class UpdateCustomerRequest extends FormRequest
      */
     public function rules()
     {
+        $customer_id = $this->user('customers');
+
         return [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
-            'phone' => ['required', 'string', Rule::unique('customers')],
-            'password' => 'required|string|min:6|max:10',
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'boolean', // Validate status field
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')->ignore($customer_id)], //unique:users,email
+            // 'phone' => ['required', 'string', Rule::unique('customers')],
+            // 'password' => 'required|string|min:6|max:10',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:1',
         ];
     }
 
