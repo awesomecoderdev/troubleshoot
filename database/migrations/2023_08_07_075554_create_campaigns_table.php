@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('campaigns', function (Blueprint $table) {
+        Schema::create("campaigns", function (Blueprint $table) {
             $table->id();
             $table->integer("provider_id")->default(0);
             $table->integer("service_id")->default(0);
             $table->integer("category_id")->default(0);
             $table->integer("zone_id")->default(0);
-            $table->string('name');
+            $table->string("name");
             $table->enum("type", ["category", "service"])->default("service");
             $table->integer("discount_percentage")->default(0);
             $table->timestamp("start")->nullable();
             $table->timestamp("end")->nullable();
-            $table->string('image')->nullable();
+            $table->string("image")->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('campaigns');
+        Schema::dropIfExists("campaigns");
     }
 };

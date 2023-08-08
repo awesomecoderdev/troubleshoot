@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
 use App\Http\Controllers\Api\V1\Auth\HandymanController;
+use App\Http\Controllers\Api\V1\Auth\ProviderController;
 use App\Http\Controllers\Api\V1\Auth\UserController;
 use App\Http\Controllers\Api\V1\CsrfTokenController;
 use Illuminate\Http\Request;
@@ -46,7 +47,31 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
     // Handyman Routes
     Route::group(['prefix' => 'handyman', 'as' => 'handyman', "controller" => HandymanController::class], function () {
-        Route::post('/register', 'register')->name("register");
+        // guest route
+        Route::middleware(['handyman:false'])->group(function () {
+            Route::post('/login', 'login')->name("login");
+            Route::post('/register', 'register')->name("register");
+        });
+
+        // authorization route
+        Route::middleware(['handyman'])->group(function () {
+            Route::get('/', 'handyman')->name("handyman");
+        });
+    });
+
+
+    // Provider Routes
+    Route::group(['prefix' => 'provider', 'as' => 'provider', "controller" => ProviderController::class], function () {
+        // guest route
+        Route::middleware(['provider:false'])->group(function () {
+            Route::post('/login', 'login')->name("login");
+            Route::post('/register', 'register')->name("register");
+        });
+
+        // authorization route
+        Route::middleware(['provider'])->group(function () {
+            Route::get('/', 'provider')->name("provider");
+        });
     });
 });
 

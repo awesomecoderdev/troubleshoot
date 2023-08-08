@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\RegisteredCustomer;
 use App\Events\RegisteredHandyman;
+use App\Events\RegisteredProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -25,7 +26,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         RegisteredHandyman::class => [
             // handyman notifications
-        ]
+        ],
+        RegisteredProvider::class => [
+            // provider notifications
+        ],
     ];
 
     /**

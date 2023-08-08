@@ -50,6 +50,11 @@ return [
             'provider' => 'handymans',
             'hash' => false,
         ],
+        'providers' => [
+            'driver' => 'sanctum',
+            'provider' => 'providers',
+            'hash' => false,
+        ],
     ],
 
     /*
@@ -81,6 +86,10 @@ return [
         'handymans' => [
             'driver' => 'eloquent',
             'model' => \App\Models\Handyman::class,
+        ],
+        'providers' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\Provider::class,
         ],
         // 'users' => [
         //     'driver' => 'database',

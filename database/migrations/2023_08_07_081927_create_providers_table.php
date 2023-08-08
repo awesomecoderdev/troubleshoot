@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('providers', function (Blueprint $table) {
+        Schema::create("providers", function (Blueprint $table) {
             $table->id();
             $table->integer("zone_id");
-            $table->string('company_name')->nullable();
-            $table->string('first_name')->nullable();
-            $table->string('last_name')->nullable();
-            $table->string('email')->unique();
-            $table->string('password');
+            $table->string("company_name")->nullable();
+            $table->string("first_name")->nullable();
+            $table->string("last_name")->nullable();
+            $table->string("email")->unique();
+            $table->string("password");
             $table->string("phone", 15)->unique();
             $table->string("identity_number");
             $table->string("contact_person_name");
@@ -47,6 +47,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('providers');
+        Schema::dropIfExists("providers");
     }
 };

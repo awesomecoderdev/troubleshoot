@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Response;
 
-class StoreProviderRequest extends FormRequest
+class ProviderLoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,13 +28,11 @@ class StoreProviderRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
-            'phone' => ['required', 'string', Rule::unique('customers')],
-            'password' => 'required|string|min:6|max:10',
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'boolean', // Validate status field
+            // 'first_name' => 'required|string|max:255',
+            // 'last_name' => 'required|string|max:255',
+            // 'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
+            'login_field' => 'required',
+            'password' => 'required|string',
         ];
     }
 
