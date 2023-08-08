@@ -255,7 +255,8 @@ class CustomerController extends Controller
         try {
             // If the user is not registered, proceed with registration
             $otp = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
-
+            $phone = $request->phone;
+            $ttl = 1; // 1 min lock for otp
             $customer = Customer::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -275,20 +276,45 @@ class CustomerController extends Controller
             //     $customer->image = str_replace('public/', '', $imagePath); // Remove 'public/' from the image path
             // }
 
-            // Send the OTP to the user's phone (You can adjust this based on your SMS service provider and configuration)
-            // sendOtpToPhone($request->phone, $otp);'
+            // Send the OTP to the user's phone
+            if (!Cache::has("$phone")) {
+                try {
+                    Cache::remember("$phone", 60 * $ttl, function () { // disabled for 2 minutes
+                        return true;
+                    });
+
+                    // start::sending otp
+                    $this->sendOtp($phone, $otp);
+                    // end::sending otp
+
+                    return Response::json([
+                        'success'   => true,
+                        'status'    => HTTP::HTTP_CREATED,
+                        'message'   => "Customer registered successfully.",
+                    ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
+                } catch (\Exception $e) {
+                    //throw $e;
+                    return Response::json([
+                        'success'   => false,
+                        'status'    => HTTP::HTTP_FORBIDDEN,
+                        "message" => 'Something went wrong. Please try again after few min.',
+                        // 'err' => $e->getMessage(),
+                    ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+                }
+            }
+
             return Response::json([
-                'success'   => true,
-                'status'    => HTTP::HTTP_CREATED,
-                'message'   => "Customer registered successfully.",
-            ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
+                "success" => false,
+                'status'  => HTTP::HTTP_BAD_REQUEST,
+                "message" => "Please try again after $ttl min.",
+            ], HTTP::HTTP_OK);
         } catch (\Exception $e) {
             //throw $e;
             return Response::json([
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,
                 'message'   => "Something went wrong. Try after sometimes.",
-                'err' => $e->getMessage(),
+                // 'err' => $e->getMessage(),
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }
@@ -317,10 +343,8 @@ class CustomerController extends Controller
                     return true;
                 });
 
-                // send otp here
-
                 // start::sending otp
-                // do api call to otp
+                $this->sendOtp($phone, $otp);
                 // end::sending otp
 
                 return Response::json([
@@ -344,5 +368,24 @@ class CustomerController extends Controller
             'status'  => HTTP::HTTP_BAD_REQUEST,
             "message" => "Please try again after $ttl min.",
         ], HTTP::HTTP_OK);
+    }
+
+
+
+    /**
+     * Generate a unique ref code for customer.
+     */
+    private function sendOtp($phone, $otp)
+    {
+        try {
+            // send otp here
+
+            // start::sending otp
+            // do api call to otp
+            // end::sending otp
+
+        } catch (\Exception $e) {
+            //throw $e;
+        }
     }
 }
