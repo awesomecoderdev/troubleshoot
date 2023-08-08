@@ -44,8 +44,8 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         if (Str::startsWith($request->path(), 'api')) {
-            // $status = method_exists(Throwable::class, 'getStatusCode') ? $e->getStatusCode() : 404;
-            $status = HTTP::HTTP_NOT_FOUND;
+            $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : HTTP::HTTP_INTERNAL_SERVER_ERROR;
+            // $status = HTTP::HTTP_NOT_FOUND;
             return Response::json([
                 'success'   => false,
                 'status'    => $status,
