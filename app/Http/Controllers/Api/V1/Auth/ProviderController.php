@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 use App\Http\Requests\StoreProviderRequest;
+use App\Http\Resources\Api\V1\ProviderResource;
 use Carbon\Carbon;
 
 class ProviderController extends Controller
@@ -30,7 +31,7 @@ class ProviderController extends Controller
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Provider successfully authorized.",
                 'data'   => [
-                    "provider" => $request->user('providers')
+                    "provider" => new ProviderResource($request->user('providers'))
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {

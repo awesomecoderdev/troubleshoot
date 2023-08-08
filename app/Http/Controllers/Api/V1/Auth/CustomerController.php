@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\Api\V1\CustomerLoginRequest;
+use App\Http\Resources\Api\V1\CustomerResource;
 
 class CustomerController extends Controller
 {
@@ -30,7 +31,7 @@ class CustomerController extends Controller
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Customer successfully authorized.",
-                'request'   => $request->user('customers')
+                'info'   => new CustomerResource($request->user('customers'))
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;

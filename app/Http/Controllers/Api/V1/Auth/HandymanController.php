@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\HandymanLoginRequest;
 use Illuminate\Support\Facades\Response;
 use App\Http\Requests\StoreHandymanRequest;
+use App\Http\Resources\Api\V1\HandymanResource;
 
 class HandymanController extends Controller
 {
@@ -26,7 +27,7 @@ class HandymanController extends Controller
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Handyman successfully authorized.",
                 'data'   => [
-                    "handyman" => $request->user('handymans')
+                    "handyman" => new HandymanResource($request->user('handymans'))
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
@@ -35,7 +36,7 @@ class HandymanController extends Controller
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,
                 'message'   => "Something went wrong. Try after sometimes.",
-                'err' => $e->getMessage(),
+                // 'err' => $e->getMessage(),
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }
