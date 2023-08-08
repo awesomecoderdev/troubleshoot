@@ -30,11 +30,11 @@ class StoreHandymanRequest extends FormRequest
         return [
             'name' => 'required|string|min:4|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('handymen')], //unique:users,email
-            'phone' => ['required', 'string', Rule::unique('handymen')],
+            'phone' => ['required', 'string', 'min:10', 'max:15', Rule::unique('handymen')],
             'password' => 'required|string|min:6|max:10',
             // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'address' => 'required',
-            // 'provider_id' => 'required',
+            'address' => 'required|string',
+            'provider_id' => 'required|integer',
         ];
     }
 
