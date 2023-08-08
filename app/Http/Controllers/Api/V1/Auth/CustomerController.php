@@ -278,37 +278,25 @@ class CustomerController extends Controller
             // }
 
             // Send the OTP to the user's phone
-            if (!Cache::has("$phone")) {
-                try {
-                    Cache::remember("$phone", 60 * $ttl, function () { // disabled for 2 minutes
-                        return true;
-                    });
+            try {
+                Cache::remember("$phone", 60 * $ttl, function () { // disabled for 2 minutes
+                    return true;
+                });
 
-                    // start::sending otp
-                    $this->sendOtp($phone, $otp);
-                    // end::sending otp
+                // start::sending otp
+                $this->sendOtp($phone, $otp);
+                // end::sending otp
+            } catch (\Exception $e) {
+                //throw $e;
 
-                    return Response::json([
-                        'success'   => true,
-                        'status'    => HTTP::HTTP_CREATED,
-                        'message'   => "Customer registered successfully.",
-                    ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
-                } catch (\Exception $e) {
-                    //throw $e;
-                    return Response::json([
-                        'success'   => false,
-                        'status'    => HTTP::HTTP_FORBIDDEN,
-                        "message" => 'Something went wrong. Please try again after few min.',
-                        // 'err' => $e->getMessage(),
-                    ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
-                }
+                // skip error for first time send OTP
             }
 
             return Response::json([
-                "success" => false,
-                'status'  => HTTP::HTTP_BAD_REQUEST,
-                "message" => "Please try again after $ttl min.",
-            ], HTTP::HTTP_OK);
+                'success'   => true,
+                'status'    => HTTP::HTTP_CREATED,
+                'message'   => "Customer registered successfully.",
+            ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
             return Response::json([
