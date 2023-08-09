@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Handyman;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -15,10 +16,10 @@ class UpdateHandymanRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
-    {
-        return false;
-    }
+    // public function authorize(): bool
+    // {
+    //     return false;
+    // }
 
     /**
      * Get the validation rules that apply to the request.
@@ -28,13 +29,13 @@ class UpdateHandymanRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
-            'phone' => ['required', 'string', Rule::unique('customers')],
+            'phone' => "required|min:10|max:15|unique:handymen,phone,$this->handyman_id",
+            'email' => "required|min:10|max:15|unique:handymen,email,$this->handyman_id",
+            'handyman_id' => 'required|integer|exists:handymen,id',
+            'name' => 'required|string|min:4|max:255',
             'password' => 'required|string|min:6|max:10',
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'boolean', // Validate status field
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:1',
+            'address' => 'required|string',
         ];
     }
 

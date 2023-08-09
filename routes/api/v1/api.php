@@ -24,7 +24,6 @@ use Illuminate\Http\Request;
 // Refresh the csrf token.
 Route::any('/refresh-csrf', [CsrfTokenController::class, 'refresh'])->name('csrf.refresh');
 
-
 // Guest routes
 Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
@@ -59,7 +58,9 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         // guest route
         Route::middleware(['handyman:false'])->group(function () {
             Route::post('/login', 'login')->name("login");
-            Route::post('/register', 'register')->name("register");
+            Route::post('/register', 'register')->middleware("provider")->name("register");
+            Route::post('/update', 'update')->middleware("provider")->name("update");
+            Route::post('/delete', 'delete')->middleware("provider")->name("delete");
         });
 
         // authorization route

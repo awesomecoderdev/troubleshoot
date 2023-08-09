@@ -327,33 +327,35 @@ class CustomerController extends Controller
             'image',
         ]);
 
-        // Handle image upload and update
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = "$customer->id." . $image->getClientOriginalExtension();
-            $imagePath = "public/images/$imageName";
+        try {
 
-            // Create the "public/images" directory if it doesn't exist
-            if (!Storage::exists('public/images')) {
-                Storage::makeDirectory('public/images');
+            // Handle image upload and update
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = "customer_$customer->id." . $image->getClientOriginalExtension();
+                $imagePath = "public/images/$imageName";
+
+                // Create the "public/images" directory if it doesn't exist
+                if (!Storage::exists('public/images')) {
+                    Storage::makeDirectory('public/images');
+                }
+
+                // Save the image to the specified path
+                Image::make($image)->resize(200, 200)->save(storage_path("app/$imagePath"));
+                $credentials['image'] = $imageName;
             }
 
-            // Save the image to the specified path
-            Image::make($image)->resize(200, 200)->save(storage_path("app/$imagePath"));
-            $credentials['image'] = $imageName;
-        }
 
-        // Update the customer data
-        $customer->update($credentials);
+            // Update the customer data
+            $customer->update($credentials);
 
-        try {
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Profile updated successfully.",
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
-            //throw $e;
+            throw $e;
             return Response::json([
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,
@@ -465,8 +467,6 @@ class CustomerController extends Controller
             "message" => "Please try again after $ttl min.",
         ], HTTP::HTTP_OK);
     }
-
-
 
     /**
      * Generate a unique ref code for customer.

@@ -3,16 +3,21 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Models\Handyman;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response as HTTP;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Events\RegisteredHandyman;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\HandymanLoginRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Response as HTTP;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreHandymanRequest;
+use App\Http\Requests\UpdateHandymanRequest;
 use App\Http\Resources\Api\V1\HandymanResource;
+use App\Http\Requests\Api\V1\HandymanLoginRequest;
 
 class HandymanController extends Controller
 {
@@ -158,6 +163,123 @@ class HandymanController extends Controller
                 'status'    => HTTP::HTTP_FORBIDDEN,
                 'message'   => "Something went wrong. Try after sometimes.",
                 'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+    /**
+     * Update customer data database.
+     */
+    public function update(UpdateHandymanRequest $request)
+    {
+        // get provider
+        $provider = $request->user('providers');
+        $handyman = Handyman::where("id", "$request->handyman_id")->first();
+
+        $credentials = Arr::only($request->all(), [
+            'name',
+            'email',
+            'phone',
+            'password',
+            'image',
+            'address'
+        ]);
+
+        try {
+            if ($handyman->provider_id != $provider->id) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "You are not allowed to modify this handyman.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+
+            // Handle image upload and update
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = "handyman_$handyman->id." . $image->getClientOriginalExtension();
+                $imagePath = "public/images/$imageName";
+
+                // Create the "public/images" directory if it doesn't exist
+                if (!Storage::exists('public/images')) {
+                    Storage::makeDirectory('public/images');
+                }
+
+                // Save the image to the specified path
+                Image::make($image)->resize(200, 200)->save(storage_path("app/$imagePath"));
+                $credentials['image'] = $imageName;
+            }
+
+            // Update the handyman data
+            $handyman->update($credentials);
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Handyman updated successfully.",
+                'data'      => [
+                    "handyman" => $handyman
+                ],
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                // 'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+
+    /**
+     * Delete customer from database.
+     */
+    public function delete(Request $request)
+    {
+        // get provider
+        $provider = $request->user('providers');
+        $validator = Validator::make($request->all(), [
+            'handyman_id' => 'required|integer|exists:handymen,id',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'error' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        try {
+            $handyman = Handyman::where("id", $request->handyman_id)->first();
+
+            if ($handyman->provider_id != $provider->id) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "You are not allowed to delete this handyman.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+
+            // Delete the account from the database
+            $handyman->tokens()->delete();
+            $handyman->delete();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_ACCEPTED,
+                'message'   => "Account deleted successfully.",
+            ],  HTTP::HTTP_ACCEPTED); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                // 'err' => $e->getMessage(),
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }

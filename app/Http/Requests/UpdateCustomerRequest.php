@@ -27,13 +27,13 @@ class UpdateCustomerRequest extends FormRequest
      */
     public function rules()
     {
-        $customer_id = $this->user('customers');
+        $customer = $this->user('customers');
 
         return [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')->ignore($customer_id)], //unique:users,email
-            // 'phone' => ['required', 'string', Rule::unique('customers')],
+            // 'phone' => "required|min:10|max:15|unique:customers,phone,$customer->id",
+            'email' => "required|max:100|unique:customers,email,$customer->id",
             // 'password' => 'required|string|min:6|max:10',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:1',
         ];
