@@ -47,13 +47,13 @@ class Handler extends ExceptionHandler
         if (Str::startsWith($request->path(), 'api')) {
 
             // Not FoundHttp Exception
-            if ($e instanceof ModelNotFoundException || $e instanceof RouteNotFoundException || $e instanceof NotFoundHttpException) {
-                return Response::json([
-                    'success'   => false,
-                    'status'    => HTTP::HTTP_NOT_FOUND,
-                    'message'   =>  "Not Found.",
-                ], HTTP::HTTP_NOT_FOUND);
-            }
+            // if ($e instanceof ModelNotFoundException || $e instanceof RouteNotFoundException || $e instanceof NotFoundHttpException) {
+            //     return Response::json([
+            //         'success'   => false,
+            //         'status'    => HTTP::HTTP_NOT_FOUND,
+            //         'message'   =>  "Not Found.",
+            //     ], HTTP::HTTP_NOT_FOUND);
+            // }
 
 
             //  default exception

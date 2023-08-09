@@ -90,8 +90,10 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
 
 // Services routes
-Route::group(["as" => "service."], function () {
-    Route::resource('services', ServiceController::class)->only(['index', 'show']);
+Route::group(["as" => "service.", 'prefix' => 'service', "controller" => ServiceController::class], function () {
+    // Provider Routes
+    Route::get('/', 'index')->name("index");
+    Route::get('/{service}', 'show')->name("show");
 });
 
 
