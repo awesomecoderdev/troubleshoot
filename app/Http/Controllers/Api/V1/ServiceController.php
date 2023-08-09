@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Resources\Api\V1\ServiceResource;
+use Illuminate\Support\Arr;
 
 class ServiceController extends Controller
 {
@@ -38,15 +39,13 @@ class ServiceController extends Controller
         }
 
         try {
-            $services = Service::where('category_id', $category)->where('zone_id', $zone)->get();
-
+            $params = Arr::only($request->input(), ["category_id", "zone_id"]);
+            $services = Service::where('category_id', $category)->where('zone_id', $zone)->paginate(10)->onEachSide(0)->appends($params);
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully authorized.",
-                'data'      => [
-                    'services'  => $services,
-                ]
+                'services'  => $services,
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
