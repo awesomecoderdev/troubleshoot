@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
+use App\Http\Resources\Api\V1\ProviderResource;
 use App\Http\Resources\Api\V1\ServiceResource;
 
 class ProviderServiceController extends Controller
@@ -27,7 +28,7 @@ class ProviderServiceController extends Controller
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully authorized.",
                 'data'      => [
-                    'provider'  => $provider,
+                    'provider'  => new ProviderResource($provider),
                     'services'  => $provider->services
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
