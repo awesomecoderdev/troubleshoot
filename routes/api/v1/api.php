@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\V1\Auth\CustomerController;
 use App\Http\Controllers\Api\V1\Auth\HandymanController;
 use App\Http\Controllers\Api\V1\Auth\ProviderController;
 use App\Http\Controllers\Api\V1\Auth\UserController;
+use App\Http\Controllers\Api\V1\CampaignController;
+use App\Http\Controllers\Api\V1\CampaignZoneController;
 use App\Http\Controllers\Api\V1\CsrfTokenController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
 use App\Http\Controllers\Api\V1\ServiceController;
@@ -20,6 +22,17 @@ use Illuminate\Http\Request;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+
+
+// V1 Base Route.
+Route::any('/', function (Request $request) {
+    return response()->json([
+        "success" => true,
+        "status" => 200,
+        "message" => "Troubleshoot API Version V0.1"
+    ]);
+});
 
 // Refresh the csrf token.
 Route::any('/refresh-csrf', [CsrfTokenController::class, 'refresh'])->name('csrf.refresh');
@@ -89,19 +102,30 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
     });
 });
 
-
 // Services routes
 Route::group(["as" => "service.", 'prefix' => 'service', "controller" => ServiceController::class], function () {
-    // Provider Routes
     Route::get('/', 'index')->name("index");
     Route::get('/{service}', 'show')->name("show");
 });
 
+// Campaigns routes
+Route::group(["as" => "campaign.", 'prefix' => 'campaign', "controller" => CampaignController::class], function () {
+    Route::get('/', 'index')->name("index");
+    Route::get('/{campaign}', 'show')->name("show");
 
-Route::any('/', function (Request $request) {
-    return response()->json([
-        "status" => "Hello world",
-        "request" => $request->all(),
-        "csrf" => $request->session()->token()
-    ]);
+    // by zone
+    Route::get('/zone/{zone}', 'show')->name("zone.show");
 });
+
+// Route::group(['prefix' => 'campaign'], function () {
+//     Route::get('/get-campaigns/{zone}', [CamapignController::class, 'getCampaignsByZone']);
+//     Route::get('/get-service-campaigns/{zone}', [CamapignController::class, 'getCampaignsByZoneWithService']);
+// });
+// Route::get('/service-campaigns/{id}', [CamapignController::class, 'campaignServiceDetail']);
+
+// Route::get('/campaigns/{id}', [CamapignController::class, 'getCampaignCategories']);
+
+
+// Route::get('/categories', [CategoryController::class, 'getCategory']);
+// Route::get('/subcategories/{categoryId}', [CategoryController::class, 'getSubCategory']);
+// Route::get('/get-zone', [ZoneController::class, 'get_zone']);
