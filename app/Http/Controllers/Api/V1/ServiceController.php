@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Resources\Api\V1\ServiceResource;
@@ -19,13 +20,33 @@ class ServiceController extends Controller
      */
     public function index(Request $request)
     {
+
+        $category = $request->category_id;
+        $zone = $request->zone_id;
+        $validator = Validator::make($request->all(), [
+            'category_id' => 'required|integer',
+            'zone_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'error' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
         try {
-            $services = Service::all();
+            $services = Service::where('category_id', $category)->where('zone_id', $zone)->get();
+
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully authorized.",
-                'services'  => $services
+                'data'      => [
+                    'services'  => $services,
+                ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
