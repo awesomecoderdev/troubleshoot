@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+
 class Handler extends ExceptionHandler
 {
     /**
@@ -44,6 +45,18 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         if (Str::startsWith($request->path(), 'api')) {
+
+            // Not FoundHttp Exception
+            if ($e instanceof ModelNotFoundException || $e instanceof RouteNotFoundException || $e instanceof NotFoundHttpException) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_NOT_FOUND,
+                    'message'   =>  "Not Found.",
+                ], HTTP::HTTP_NOT_FOUND);
+            }
+
+
+            //  default exception
             $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : HTTP::HTTP_INTERNAL_SERVER_ERROR;
             // $status = HTTP::HTTP_NOT_FOUND;
             return Response::json([
@@ -52,6 +65,9 @@ class Handler extends ExceptionHandler
                 'message'   => $e->getMessage(),
             ], $status); // HTTP::HTTP_OK
         }
+
+
+
         return parent::render($request, $e);
     }
 }

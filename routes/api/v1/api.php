@@ -91,7 +91,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
 // Services routes
 Route::group(["as" => "service."], function () {
-    Route::get('/services', [ServiceController::class, 'index'])->name("index");
+    Route::resource('services', ServiceController::class)->only(['index', 'show']);
 });
 
 
