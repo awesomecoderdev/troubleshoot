@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 
+use Carbon\Carbon;
+use App\Models\Service;
 use App\Models\Provider;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\RegisteredProvider;
-use Illuminate\Http\Response as HTTP;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\ProviderLoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Response;
 use App\Http\Requests\StoreProviderRequest;
 use App\Http\Resources\Api\V1\ProviderResource;
-use Carbon\Carbon;
+use App\Http\Requests\Api\V1\ProviderLoginRequest;
 
 class ProviderController extends Controller
 {
@@ -25,13 +26,15 @@ class ProviderController extends Controller
      */
     public function provider(Request $request)
     {
+        $provider = $request->user("providers");
         try {
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Provider successfully authorized.",
                 'data'   => [
-                    "provider" => new ProviderResource($request->user('providers'))
+                    "provider" => new ProviderResource($provider),
+                    // "services" => $provider->services
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
@@ -45,6 +48,29 @@ class ProviderController extends Controller
         }
     }
 
+    /**
+     * Display a listing of the resource.
+     */
+    public function services(Request $request)
+    {
+        try {
+            $services = Service::all();
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully authorized.",
+                'services'  => $services
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
 
     /**
      * Logout provider.

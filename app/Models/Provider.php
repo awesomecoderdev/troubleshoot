@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use DateTimeInterface;
+use App\Models\Service;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
@@ -83,7 +84,15 @@ class Provider extends Authenticatable
     //     );
     // }
 
-
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Service
+     */
+    public function services()
+    {
+        return $this->hasMany(Service::class)->orderBy('created_at', 'desc');
+    }
 
     /**
      * Create a new personal access token for the user.

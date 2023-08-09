@@ -5,8 +5,10 @@ use App\Http\Controllers\Api\V1\Auth\HandymanController;
 use App\Http\Controllers\Api\V1\Auth\ProviderController;
 use App\Http\Controllers\Api\V1\Auth\UserController;
 use App\Http\Controllers\Api\V1\CsrfTokenController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\ProviderServiceController;
+use App\Http\Controllers\Api\V1\ServiceController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +34,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
     // });
 
     // Customer Routes
-    Route::group(['prefix' => 'customer', 'as' => 'customer', "controller" => CustomerController::class], function () {
+    Route::group(['prefix' => 'customer', 'as' => 'customer.', "controller" => CustomerController::class], function () {
         // guest route
         Route::middleware(['customer:false'])->group(function () {
             Route::post('/login', 'login')->name("login");
@@ -53,7 +55,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
     });
 
     // Handyman Routes
-    Route::group(['prefix' => 'handyman', 'as' => 'handyman', "controller" => HandymanController::class], function () {
+    Route::group(['prefix' => 'handyman', 'as' => 'handyman.', "controller" => HandymanController::class], function () {
         // guest route
         Route::middleware(['handyman:false'])->group(function () {
             Route::post('/login', 'login')->name("login");
@@ -68,7 +70,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
     });
 
     // Provider Routes
-    Route::group(['prefix' => 'provider', 'as' => 'provider', "controller" => ProviderController::class], function () {
+    Route::group(['prefix' => 'provider', 'as' => 'provider.', "controller" => ProviderController::class], function () {
         // guest route
         Route::middleware(['provider:false'])->group(function () {
             Route::post('/login', 'login')->name("login");
@@ -79,16 +81,19 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         Route::middleware(['provider'])->group(function () {
             Route::get('/', 'provider')->name("provider");
             Route::post('/logout', 'logout')->name("logout");
+
+            // provider services crud route
+            Route::resource('service', ProviderServiceController::class)->except(['create', 'edit']);
         });
     });
 });
 
 
+// Services routes
+Route::group(["as" => "service."], function () {
+    Route::get('/services', [ServiceController::class, 'index'])->name("index");
+});
 
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 
 Route::any('/', function (Request $request) {
     return response()->json([

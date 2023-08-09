@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+
 use App\Models\Service;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -12,20 +13,23 @@ use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Resources\Api\V1\ServiceResource;
 
-class ServiceController extends Controller
+class ProviderServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+        $provider = $request->user("providers");
         try {
-            $services = Service::all();
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully authorized.",
-                'services'  => $services
+                'data'      => [
+                    'provider'  => $provider,
+                    'services'  => $provider->services
+                ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
@@ -78,9 +82,35 @@ class ServiceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Service $service)
+    public function show(Service $service, Request $request)
     {
-        //
+        $provider = $request->user("providers");
+        try {
+            if ($service->provider_id != $provider->id) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "You are not allowed to modify this service.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully Authorized.",
+                'data'      => [
+                    "service"   => $service,
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
     }
 
     /**
@@ -94,7 +124,7 @@ class ServiceController extends Controller
                 return Response::json([
                     'success'   => false,
                     'status'    => HTTP::HTTP_FORBIDDEN,
-                    'message'   => "You are not allowed to modify this service.",
+                    'message'   => "You are not belong to this service.",
                 ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
             }
 
@@ -115,7 +145,9 @@ class ServiceController extends Controller
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Service successfully updated.",
-                "service"   => $service,
+                'data'      => [
+                    "service"   => $service,
+                ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
@@ -131,8 +163,33 @@ class ServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Service $service)
+    public function destroy(Service $service, Request $request)
     {
-        //
+        $provider = $request->user("providers");
+        try {
+            if ($service->provider_id != $provider->id) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "You are not allowed to delete this service.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+
+            $service->delete();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Service successfully deleted.",
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
     }
 }

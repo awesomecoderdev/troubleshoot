@@ -312,7 +312,6 @@ class CustomerController extends Controller
         }
     }
 
-
     /**
      * Update customer data database.
      */
