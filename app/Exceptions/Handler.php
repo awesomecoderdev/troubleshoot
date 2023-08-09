@@ -66,8 +66,6 @@ class Handler extends ExceptionHandler
             ], $status); // HTTP::HTTP_OK
         }
 
-
-
         return parent::render($request, $e);
     }
 }
