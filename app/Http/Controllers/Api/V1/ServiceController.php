@@ -40,12 +40,14 @@ class ServiceController extends Controller
 
         try {
             $params = Arr::only($request->input(), ["category_id", "zone_id"]);
-            $services = Service::where('category_id', $category)->where('zone_id', $zone)->paginate(10)->onEachSide(0)->appends($params);
+            $services = Service::where('category_id', $category)->where('zone_id', $zone)->paginate(10)->onEachSide(-1)->appends($params);
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully authorized.",
-                'services'  => $services,
+                'data'      => [
+                    'services'  => $services,
+                ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
