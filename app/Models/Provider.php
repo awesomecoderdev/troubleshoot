@@ -3,7 +3,9 @@
 namespace App\Models;
 
 
+use App\Models\Review;
 use DateTimeInterface;
+use App\Models\Booking;
 use App\Models\Service;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
@@ -76,13 +78,15 @@ class Provider extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    // protected function meta(): Attribute
-    // {
-    //     return Attribute::make(
-    //         get: fn ($value) => Collection::make($value),
-    //         set: fn ($value) => strtolower($value),
-    //     );
-    // }
+    protected function avgRating(): Attribute
+    {
+        $ratings = $this->reviews()->pluck('review_rating')->toArray();
+        $averageRating = collect($ratings)->average();
+        return Attribute::make(
+            get: fn ($value) => $averageRating,
+            // set: fn ($value) => strtolower($value),
+        );
+    }
 
     /**
      * Display the specified resource.
@@ -93,6 +97,40 @@ class Provider extends Authenticatable
     {
         return $this->hasMany(Service::class)->orderBy('created_at', 'desc');
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Service
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Service
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Interact with the user's first name.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    // protected function meta(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => Collection::make($value),
+    //         set: fn ($value) => strtolower($value),
+    //     );
+    // }
+
 
     /**
      * Create a new personal access token for the user.

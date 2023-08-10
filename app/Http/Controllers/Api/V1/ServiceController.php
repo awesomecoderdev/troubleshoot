@@ -199,6 +199,9 @@ class ServiceController extends Controller
         try {
             // Update the rating_count and avg_rating
             $newRatingCount = $service->rating_count + 1;
+            $provider = $booking->provider;
+            $provider->rating_count = $provider->rating_count + 1;
+            $provider->save();
 
             // If the rating_count is 0, set the avg_rating to the new rating value
             if ($service->rating_count == 0) {

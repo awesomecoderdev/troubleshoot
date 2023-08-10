@@ -34,4 +34,14 @@ class Booking extends Model
         "additional_charge",
         "is_rated",
     ];
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Provider
+     */
+    public function provider()
+    {
+        return $this->belongsTo(Provider::class);
+    }
 }
