@@ -52,6 +52,17 @@ class Customer extends Authenticatable
 
 
     /**
+     * Customer full name.
+     *
+     * @return  string
+     */
+    public function name()
+    {
+        return ucwords("$this->first_name $this->last_name");
+    }
+
+
+    /**
      * Create a new personal access token for the user.
      *
      * @param  string  $name

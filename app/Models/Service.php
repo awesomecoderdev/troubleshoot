@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Review;
+use App\Models\Category;
+use App\Models\Provider;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Service extends Model
 {
@@ -62,5 +65,35 @@ class Service extends Model
     public function campaigns()
     {
         return $this->hasMany(Campaign::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Provider
+     */
+    public function provider()
+    {
+        return $this->belongsTo(Provider::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Category
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Category
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use Carbon\Carbon;
 use App\Models\Zone;
+use App\Models\Review;
 use App\Models\Service;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -67,7 +69,7 @@ class ServiceController extends Controller
     public function show(Request $request)
     {
         // get the search, popular, recommended services
-        if (in_array($request->service, ["search", "popular", "recommended",])) {
+        if (in_array($request->service, ["search", "popular", "recommended"])) {
             $zone = $request->zone_id;
             $query = $request->query;
             $params = Arr::only($request->input(), ["query", "zone_id"]);
@@ -141,7 +143,7 @@ class ServiceController extends Controller
             }
         } else {
             try {
-                $service = Service::findOrFail($request->service);
+                $service = Service::with(["provider", "reviews"])->findOrFail($request->service);
                 return Response::json([
                     'success'   => true,
                     'status'    => HTTP::HTTP_OK,
@@ -151,14 +153,83 @@ class ServiceController extends Controller
                     ]
                 ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
             } catch (\Exception $e) {
-                //throw $e;
-                return Response::json([
-                    'success'   => false,
-                    'status'    => HTTP::HTTP_FORBIDDEN,
-                    'message'   => "Something went wrong. Try after sometimes.",
-                    'err' => $e->getMessage(),
-                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+                throw $e;
+                // return Response::json([
+                //     'success'   => false,
+                //     'status'    => HTTP::HTTP_FORBIDDEN,
+                //     'message'   => "Something went wrong. Try after sometimes.",
+                //     'err' => $e->getMessage(),
+                // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
             }
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function review(Service $service, Request $request)
+    {
+        $customer = $request->user('customers');
+
+        $validator = Validator::make($request->all(), [
+            'rating' => 'required|integer|between:1,5',
+            'booking_id' => 'required|integer|exists:bookings,id',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'error' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        try {
+            // Update the rating_count and avg_rating
+            $newRatingCount = $service->rating_count + 1;
+
+            // If the rating_count is 0, set the avg_rating to the new rating value
+            if ($service->rating_count == 0) {
+                $newAvgRating = $request->rating;
+            } else {
+                $newTotalRating = $service->avg_rating * $service->rating_count + $request->rating;
+                $newAvgRating = $newTotalRating / $newRatingCount;
+            }
+
+            Review::create([
+                'booking_id' => $request->input('booking_id'),
+                'service_id' => $service->id,
+                'provider_id' => $service->provider_id,
+                'customer_name' => $customer->name(),
+                'customer_id' => $customer->id,
+                'review_rating' => $request->rating,
+                'review_comment' => $request->input('review_comment'),
+                'booking_date' => Carbon::now(),
+            ]);
+
+            // Update the service in the database
+            $service->update([
+                'rating_count' => $newRatingCount,
+                'avg_rating' => $newAvgRating,
+            ]);
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Thank you for your review.",
+                'data'      => [
+                    'service'  => $service
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            // throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }
 }

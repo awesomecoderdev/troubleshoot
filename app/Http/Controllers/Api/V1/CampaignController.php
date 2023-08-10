@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Resources\Api\V1\ServiceResource;
+use Intervention\Image\Exception\NotFoundException;
 
 class CampaignController extends Controller
 {
@@ -60,7 +61,7 @@ class CampaignController extends Controller
         }
 
         try {
-            $campaign = Campaign::where("id", $request->campaign)->first();
+            $campaign = Campaign::where("id", $request->campaign)->firstOrFail();
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
@@ -70,13 +71,13 @@ class CampaignController extends Controller
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
-            //throw $e;
-            return Response::json([
-                'success'   => false,
-                'status'    => HTTP::HTTP_FORBIDDEN,
-                'message'   => "Something went wrong. Try after sometimes.",
-                'err' => $e->getMessage(),
-            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            throw $e;
+            // return Response::json([
+            //     'success'   => false,
+            //     'status'    => HTTP::HTTP_FORBIDDEN,
+            //     'message'   => "Something went wrong. Try after sometimes.",
+            //     'err' => $e->getMessage(),
+            // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }
 
@@ -111,6 +112,7 @@ class CampaignController extends Controller
      */
     public function service(Service $service)
     {
+        $service->load(["provider", "reviews"]);
         try {
             return Response::json([
                 'success'   => true,

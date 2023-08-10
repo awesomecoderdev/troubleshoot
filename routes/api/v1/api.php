@@ -106,6 +106,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 Route::group(["as" => "service.", 'prefix' => 'service', "controller" => ServiceController::class], function () {
     Route::get('/', 'index')->name("index");
     Route::get('/{service}', 'show')->name("show");
+    Route::get('/review/{service}', 'review')->middleware("customer")->name("review");
 });
 
 // Campaigns routes
@@ -115,7 +116,7 @@ Route::group(["as" => "campaign.", 'prefix' => 'campaign', "controller" => Campa
 
     // by zone
     Route::get('/zone/{zone}', 'zone')->name("zone.show");
-    Route::get('/service/{service}', 'service')->name("service");
+    // Route::get('/service/{service}', 'service')->name("service");
 });
 
 // Route::group(['prefix' => 'campaign'], function () {
