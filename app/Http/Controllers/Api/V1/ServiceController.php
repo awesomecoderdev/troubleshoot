@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Zone;
 use App\Models\Service;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response as HTTP;
@@ -12,7 +14,6 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Resources\Api\V1\ServiceResource;
-use Illuminate\Support\Arr;
 
 class ServiceController extends Controller
 {
@@ -66,7 +67,7 @@ class ServiceController extends Controller
     public function show(Request $request)
     {
         // get the search, popular, recommended services
-        if (in_array($request->service, ["search", "popular", "recommended"])) {
+        if (in_array($request->service, ["search", "popular", "recommended",])) {
             $zone = $request->zone_id;
             $query = $request->query;
             $params = Arr::only($request->input(), ["query", "zone_id"]);

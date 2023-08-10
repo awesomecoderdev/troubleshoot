@@ -53,4 +53,14 @@ class Service extends Model
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Campaign
+     */
+    public function campaigns()
+    {
+        return $this->hasMany(Campaign::class)->orderBy('created_at', 'desc');
+    }
 }
