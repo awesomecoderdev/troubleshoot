@@ -69,7 +69,7 @@ class CustomerController extends Controller
                 'success'   => false,
                 'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
                 'message'   => "Validation failed.",
-                'error' => $validator->errors()
+                'errors' => $validator->errors()
             ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
         }
 
@@ -83,7 +83,7 @@ class CustomerController extends Controller
                     'success'   => false,
                     'status'    => HTTP::HTTP_UNAUTHORIZED,
                     'message'   => "OTP didn't matched.",
-                    'error'     => "Invalid OTP."
+                    'errors'     => "Invalid OTP."
                 ],  HTTP::HTTP_UNAUTHORIZED); // HTTP::HTTP_OK
             }
 
@@ -128,7 +128,7 @@ class CustomerController extends Controller
                 'success'   => false,
                 'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
                 'message'   => "Validation failed.",
-                'error' => $validator->errors()
+                'errors' => $validator->errors()
             ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
         }
 
@@ -219,7 +219,7 @@ class CustomerController extends Controller
                     'success'   => false,
                     'status'    => HTTP::HTTP_UNAUTHORIZED,
                     'message'   => "Unauthenticated customer credentials.",
-                    'error' => 'Invalid credentials.'
+                    'errors' => 'Invalid credentials.'
                 ],  HTTP::HTTP_UNAUTHORIZED); // HTTP::HTTP_OK
             }
             if ($customer->phone_verify === 0) {
@@ -227,7 +227,7 @@ class CustomerController extends Controller
                     'success'   => false,
                     'status'    => HTTP::HTTP_FORBIDDEN,
                     'message'   => "Customer phone is not verified.",
-                    'error' => 'Phone is not verified.'
+                    'errors' => 'Phone is not verified.'
                 ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
             }
             // $request->user('customers')->tokens()->delete();
@@ -380,7 +380,7 @@ class CustomerController extends Controller
                 'success'   => false,
                 'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
                 'message'   => "Validation failed.",
-                'error' => $validator->errors()
+                'errors' => $validator->errors()
             ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
         }
 

@@ -38,7 +38,7 @@ class ServiceController extends Controller
                 'success'   => false,
                 'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
                 'message'   => "Validation failed.",
-                'error' => $validator->errors()
+                'errors' => $validator->errors()
             ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
         }
 
@@ -91,7 +91,7 @@ class ServiceController extends Controller
                     'success'   => false,
                     'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
                     'message'   => "Validation failed.",
-                    'error' => $validator->errors()
+                    'errors' => $validator->errors()
                 ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
             }
 
@@ -182,7 +182,7 @@ class ServiceController extends Controller
                 'success'   => false,
                 'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
                 'message'   => "Validation failed.",
-                'error' => $validator->errors()
+                'errors' => $validator->errors()
             ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
         }
 

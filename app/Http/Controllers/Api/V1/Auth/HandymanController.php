@@ -102,7 +102,7 @@ class HandymanController extends Controller
                     'success'   => false,
                     'status'    => HTTP::HTTP_UNAUTHORIZED,
                     'message'   => "Unauthenticated handyman credentials.",
-                    'error' => 'Invalid credentials.'
+                    'errors' => 'Invalid credentials.'
                 ],  HTTP::HTTP_UNAUTHORIZED); // HTTP::HTTP_OK
             }
             if ($handyman->phone_verify === 0) {
@@ -110,7 +110,7 @@ class HandymanController extends Controller
                     'success'   => false,
                     'status'    => HTTP::HTTP_FORBIDDEN,
                     'message'   => "Handyman phone is not verified.",
-                    'error' => 'Phone is not verified.'
+                    'errors' => 'Phone is not verified.'
                 ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
             }
 
@@ -249,7 +249,7 @@ class HandymanController extends Controller
                 'success'   => false,
                 'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
                 'message'   => "Validation failed.",
-                'error' => $validator->errors()
+                'errors' => $validator->errors()
             ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
         }
 

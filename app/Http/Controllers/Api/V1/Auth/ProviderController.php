@@ -129,7 +129,7 @@ class ProviderController extends Controller
                     'success'   => false,
                     'status'    => HTTP::HTTP_UNAUTHORIZED,
                     'message'   => "Unauthenticated provider credentials.",
-                    'error' => 'Invalid credentials.'
+                    'errors' => 'Invalid credentials.'
                 ],  HTTP::HTTP_UNAUTHORIZED); // HTTP::HTTP_OK
             }
             if ($provider->phone_verify === 0) {
@@ -137,7 +137,7 @@ class ProviderController extends Controller
                     'success'   => false,
                     'status'    => HTTP::HTTP_FORBIDDEN,
                     'message'   => "Provider phone is not verified.",
-                    'error' => 'Phone is not verified.'
+                    'errors' => 'Phone is not verified.'
                 ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
             }
 

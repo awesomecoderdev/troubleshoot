@@ -58,7 +58,7 @@ class Handler extends ExceptionHandler
 
 
             //  default exception
-            $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : ($e->getCode() != 0 ? $e->getCode() : HTTP::HTTP_INTERNAL_SERVER_ERROR);
+            $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : HTTP::HTTP_INTERNAL_SERVER_ERROR;
             // $status = HTTP::HTTP_NOT_FOUND;
             return Response::json([
                 'success'   => false,

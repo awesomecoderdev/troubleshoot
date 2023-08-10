@@ -6,9 +6,11 @@ use App\Http\Controllers\Api\V1\Auth\ProviderController;
 use App\Http\Controllers\Api\V1\Auth\UserController;
 use App\Http\Controllers\Api\V1\CampaignController;
 use App\Http\Controllers\Api\V1\CampaignZoneController;
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\CsrfTokenController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
 use App\Http\Controllers\Api\V1\ServiceController;
+use App\Http\Controllers\Api\V1\ZoneController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -119,15 +121,13 @@ Route::group(["as" => "campaign.", 'prefix' => 'campaign', "controller" => Campa
     // Route::get('/service/{service}', 'service')->name("service");
 });
 
-// Route::group(['prefix' => 'campaign'], function () {
-//     Route::get('/get-campaigns/{zone}', [CamapignController::class, 'getCampaignsByZone']);
-//     Route::get('/get-service-campaigns/{zone}', [CamapignController::class, 'getCampaignsByZoneWithService']);
-// });
-// Route::get('/service-campaigns/{id}', [CamapignController::class, 'campaignServiceDetail']);
+// Campaigns routes
+Route::group(["as" => "categories.", "controller" => CategoryController::class], function () {
+    Route::resource('categories', CategoryController::class)->only(['index', 'show']);
+    Route::get('/subcategories', 'subcategories')->name("subcategories");
+});
 
-// Route::get('/campaigns/{id}', [CamapignController::class, 'getCampaignCategories']);
-
-
-// Route::get('/categories', [CategoryController::class, 'getCategory']);
-// Route::get('/subcategories/{categoryId}', [CategoryController::class, 'getSubCategory']);
-// Route::get('/get-zone', [ZoneController::class, 'get_zone']);
+// Campaigns routes
+Route::group(["as" => "zone.", "controller" => ZoneController::class], function () {
+    Route::get('/zone', 'zone')->name("zone");
+});
