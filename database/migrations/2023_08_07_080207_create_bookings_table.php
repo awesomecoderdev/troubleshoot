@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string("total_tax")->default("0");
             $table->string("total_discount")->default("0");
             $table->string("additional_charge")->default("0");
+            $table->boolean("is_rated")->default(false);
             $table->timestamps();
         });
     }

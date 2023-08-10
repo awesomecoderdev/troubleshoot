@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Resources\Api\V1\ServiceResource;
+use App\Models\Booking;
 
 class ServiceController extends Controller
 {
@@ -185,6 +186,16 @@ class ServiceController extends Controller
             ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
         }
 
+        $booking = Booking::where("id", $request->booking_id)->first();
+
+        if ($booking->is_rated) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "You can't review to this booking.",
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+
         try {
             // Update the rating_count and avg_rating
             $newRatingCount = $service->rating_count + 1;
@@ -213,6 +224,9 @@ class ServiceController extends Controller
                 'rating_count' => $newRatingCount,
                 'avg_rating' => $newAvgRating,
             ]);
+
+            $booking->is_rated = true;
+            $booking->save();
 
             return Response::json([
                 'success'   => true,
