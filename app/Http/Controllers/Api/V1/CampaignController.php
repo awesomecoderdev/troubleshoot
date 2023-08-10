@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Resources\Api\V1\ServiceResource;
+use App\Http\Resources\Api\V1\ZoneResource;
 use Intervention\Image\Exception\NotFoundException;
 
 class CampaignController extends Controller
@@ -93,11 +94,11 @@ class CampaignController extends Controller
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully authorized.",
                 'data'      => [
-                    'zone'  => $zone,
+                    'zone'  => new ZoneResource($zone),
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
-            //throw $e;
+            throw $e;
             return Response::json([
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,

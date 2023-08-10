@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create("zones", function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->text("coordinates");
-            // $table->polygon("coordinates");
+            // $table->text("coordinates");
+            $table->polygon("coordinates");
             $table->boolean("status")->default(true);
             $table->timestamps();
         });

@@ -52,10 +52,9 @@ class Handler extends ExceptionHandler
                     'success'   => false,
                     'status'    => HTTP::HTTP_NOT_FOUND,
                     'message'   =>  "Not Found.",
-                    'err'   => $e->getMessage(),
+                    // 'err'   => $e->getMessage(),
                 ], HTTP::HTTP_NOT_FOUND);
             }
-
 
             //  default exception
             $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : HTTP::HTTP_INTERNAL_SERVER_ERROR;

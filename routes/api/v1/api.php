@@ -108,7 +108,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 Route::group(["as" => "service.", 'prefix' => 'service', "controller" => ServiceController::class], function () {
     Route::get('/', 'index')->name("index");
     Route::get('/{service}', 'show')->name("show");
-    Route::get('/review/{service}', 'review')->middleware("customer")->name("review");
+    Route::post('/review/{service}', 'review')->middleware("customer")->name("review");
 });
 
 // Campaigns routes
