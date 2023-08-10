@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Resources\Api\V1\ServiceResource;
+use App\Models\Zone;
 use Illuminate\Support\Arr;
 
 class CampaignController extends Controller
@@ -65,6 +66,32 @@ class CampaignController extends Controller
                 'message'   => "Successfully authorized.",
                 'data'      => [
                     'campaign'  => $campaign,
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+    /**
+     * Display the specified resource based on zone.
+     */
+    public function zone(Zone $zone)
+    {
+        try {
+            $zone->load("campaigns");
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully authorized.",
+                'data'      => [
+                    'zone'  => $zone,
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {

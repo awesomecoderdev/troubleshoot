@@ -114,7 +114,7 @@ Route::group(["as" => "campaign.", 'prefix' => 'campaign', "controller" => Campa
     Route::get('/{campaign}', 'show')->name("show");
 
     // by zone
-    Route::get('/zone/{zone}', 'show')->name("zone.show");
+    Route::get('/zone/{zone}', 'zone')->name("zone.show");
 });
 
 // Route::group(['prefix' => 'campaign'], function () {
