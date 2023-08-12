@@ -35,7 +35,7 @@ class UpdateCustomerRequest extends FormRequest
             // 'phone' => "required|min:10|max:15|unique:customers,phone,$customer->id",
             'email' => "required|max:100|unique:customers,email,$customer->id",
             // 'password' => 'required|string|min:6|max:10',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:1',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 
