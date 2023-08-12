@@ -7,6 +7,7 @@ use App\Models\Review;
 use DateTimeInterface;
 use App\Models\Booking;
 use App\Models\Service;
+use App\Models\Handyman;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
@@ -107,6 +108,17 @@ class Provider extends Authenticatable
     {
         return $this->hasMany(Booking::class)->orderBy('created_at', 'desc');
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Service
+     */
+    public function handyman()
+    {
+        return $this->hasMany(Handyman::class)->orderBy('created_at', 'desc');
+    }
+
 
     /**
      * Display the specified resource.

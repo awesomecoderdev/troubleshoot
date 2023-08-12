@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\CsrfTokenController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\ZoneController;
+use App\Http\Controllers\ProviderHandymanController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -109,6 +110,9 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
             // provider services crud route
             Route::resource('service', ProviderServiceController::class)->except(['create', 'edit']);
+
+            //handyman
+            Route::get('/handyman', [ProviderHandymanController::class, 'handyman'])->name("handyman");
         });
     });
 });
