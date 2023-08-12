@@ -169,7 +169,7 @@ class ProviderController extends Controller
     {
         try {
             $provider = Provider::create([
-                "zone_id" => $request->zone_id,
+                // "zone_id" => $request->zone_id,
                 "company_name" => $request->company_name,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
