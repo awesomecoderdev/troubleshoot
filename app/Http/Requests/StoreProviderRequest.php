@@ -40,7 +40,7 @@ class StoreProviderRequest extends FormRequest
             "contact_person_name" => 'required|string|max:255',
             "contact_person_phone" => "required|string|min:10|max:15",
             "contact_email" => "required|email",
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2',
             // "identity_image" => "required",
             // "order_count" => "required",
             // "service_man_count" => "required|integer",
