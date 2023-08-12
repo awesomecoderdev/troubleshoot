@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AddressController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
 use App\Http\Controllers\Api\V1\Auth\HandymanController;
 use App\Http\Controllers\Api\V1\Auth\ProviderController;
@@ -65,6 +66,14 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             // otp routes
             Route::post('/check-otp', 'validateOtp');
             Route::post('/re-otp', 'regenerateOTP');
+
+            // address
+            Route::get('/address', [AddressController::class, 'index'])->name("address");
+            Route::post('/address/update', [AddressController::class, 'update'])->name("address.update");
+
+            // booking
+            Route::get('/address', [AddressController::class, 'index'])->name("address");
+            Route::post('/address/update', [AddressController::class, 'update'])->name("address.update");
         });
     });
 

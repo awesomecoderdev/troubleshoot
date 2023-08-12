@@ -58,6 +58,8 @@ class CustomerResource extends JsonResource
             'email',
             'phone',
             'image',
+            'address',
+            // 'bookings',
             // Add other user data as needed
         ]);
     }

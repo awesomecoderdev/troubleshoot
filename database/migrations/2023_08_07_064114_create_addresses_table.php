@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->integer("customer_id");
             $table->string("street_one");
-            $table->string("street_two");
+            $table->string("street_two")->nullable();
             $table->string("city");
             $table->string("zip");
             $table->string("lat")->nullable();
-            $table->string("long")->nullable();
+            $table->string("lng")->nullable();
             $table->timestamps();
         });
     }

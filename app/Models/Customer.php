@@ -61,6 +61,25 @@ class Customer extends Authenticatable
         return ucwords("$this->first_name $this->last_name");
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Address
+     */
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Booking
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 
     /**
      * Create a new personal access token for the user.

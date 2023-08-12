@@ -31,11 +31,14 @@ class CustomerController extends Controller
     public function customer(Request $request)
     {
         try {
+            $customer = $request->user('customers');
+            // $customer->load(["address", "bookings"]);
+            $customer->load("address");
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Customer successfully authorized.",
-                'info'   => new CustomerResource($request->user('customers'))
+                'info'   => new CustomerResource($customer)
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
