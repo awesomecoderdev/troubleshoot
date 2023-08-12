@@ -10,10 +10,10 @@ use Illuminate\Validation\Rule;
 use App\Events\RegisteredCustomer;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Cache;
-use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -336,16 +336,22 @@ class CustomerController extends Controller
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = "customer_$customer->id." . $image->getClientOriginalExtension();
-                $imagePath = "public/images/$imageName";
+                $imagePath = "images/customer/$imageName";
 
-                // Create the "public/images" directory if it doesn't exist
-                if (!Storage::exists('public/images')) {
-                    Storage::makeDirectory('public/images');
+                try {
+                    // Create the "public/images" directory if it doesn't exist
+                    if (!File::isDirectory(public_path("images/customer"))) {
+                        File::makeDirectory((public_path("images/customer")), 0777, true, true);
+                    }
+
+                    // Save the image to the specified path
+                    $image->move(public_path('images/customer'), $imageName);
+                    $imagePath = asset($imagePath);
+                    $credentials['image'] = $imagePath;
+                } catch (\Exception $e) {
+                    //throw $e;
+                    // skip if not uploaded
                 }
-
-                // Save the image to the specified path
-                Image::make($image)->resize(200, 200)->save(storage_path("app/$imagePath"));
-                $credentials['image'] = $imageName;
             }
 
 

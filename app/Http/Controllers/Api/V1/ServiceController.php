@@ -31,6 +31,7 @@ class ServiceController extends Controller
         $validator = Validator::make($request->all(), [
             'category_id' => 'required|integer',
             'zone_id' => 'required|integer',
+            'per_page' => 'integer',
         ]);
 
         if ($validator->fails()) {
@@ -44,7 +45,7 @@ class ServiceController extends Controller
 
         try {
             $params = Arr::only($request->input(), ["category_id", "zone_id"]);
-            $services = Service::where('category_id', $category)->where('zone_id', $zone)->paginate(10)->onEachSide(-1)->appends($params);
+            $services = Service::where('category_id', $category)->where('zone_id', $zone)->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
