@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create("providers", function (Blueprint $table) {
             $table->id();
-            $table->integer("zone_id");
+            $table->integer("zone_id")->default(0);
             $table->string("company_name")->nullable();
             $table->string("first_name")->nullable();
             $table->string("last_name")->nullable();

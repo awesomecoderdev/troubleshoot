@@ -168,6 +168,33 @@ class ProviderController extends Controller
     public function register(StoreProviderRequest $request)
     {
         try {
+            return response()->json([
+                // "zone_id" => $request->zone_id,
+                "company_name" => $request->company_name,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'phone' => $request->phone,
+                "identity_number" => $request->identity_number,
+                "contact_person_name" => $request->contact_person_name,
+                "contact_person_phone" => $request->contact_person_phone,
+                "contact_email" => $request->contact_email,
+                // "image" => $request->image,
+                // "identity_image" => [$request->identity_image],
+                // "order_count" => $request->order_count,
+                "service_man_count" => $request->service_man_count,
+                "service_capacity_per_day" => $request->service_capacity_per_day,
+                // "rating_count" => $request->rating_count,
+                // "avg_rating" => $request->avg_rating,
+                // "commission_status" => $request->commission_status,
+                // "commission_percentage" => $request->input('commission_percentage', 0),
+                // "is_active" => $request->is_active,
+                // "is_approved" => $request->is_approved,
+                "start" => Carbon::parse($request->start),
+                "end" => Carbon::parse($request->end),
+                "off_day" => [$request->off_day],
+            ]);
             $provider = Provider::create([
                 // "zone_id" => $request->zone_id,
                 "company_name" => $request->company_name,
