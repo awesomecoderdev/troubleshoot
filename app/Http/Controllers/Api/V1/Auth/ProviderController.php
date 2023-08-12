@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Events\RegisteredProvider;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Response;
@@ -198,10 +199,29 @@ class ProviderController extends Controller
             event(new RegisteredProvider($provider));
 
             // Handle image upload and storage
-            // if ($request->hasFile('image')) {
-            //     $imagePath = $request->file('image')->store('public/images');
-            //     $provider->image = str_replace('public/', '', $imagePath); // Remove 'public/' from the image path
-            // }
+            // Handle image upload and update
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = "provider_$provider->id." . $image->getClientOriginalExtension();
+                $imagePath = "images/provider/$imageName";
+
+                try {
+                    // Create the "public/images" directory if it doesn't exist
+                    if (!File::isDirectory(public_path("images/provider"))) {
+                        File::makeDirectory((public_path("images/provider")), 0777, true, true);
+                    }
+
+                    // Save the image to the specified path
+                    $image->move(public_path('images/provider'), $imageName);
+                    $imagePath = asset($imagePath);
+                    $provider->image = $imagePath;
+                    $provider->save();
+                } catch (\Exception $e) {
+                    //throw $e;
+                    // skip if not uploaded
+                }
+            }
+
 
             // Send the OTP to the user's phone (You can adjust this based on your SMS service provider and configuration)
             // sendOtpToPhone($request->phone, $otp);'
