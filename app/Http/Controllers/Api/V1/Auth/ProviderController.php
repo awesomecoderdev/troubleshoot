@@ -178,7 +178,7 @@ class ProviderController extends Controller
                 "identity_number" => $request->identity_number,
                 "contact_person_name" => $request->contact_person_name,
                 "contact_person_phone" => $request->contact_person_phone,
-                "account_email" => $request->account_email,
+                "contact_email" => $request->contact_email,
                 // "image" => $request->image,
                 // "identity_image" => [$request->identity_image],
                 // "order_count" => $request->order_count,

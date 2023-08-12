@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string("identity_number");
             $table->string("contact_person_name");
             $table->string("contact_person_phone");
-            $table->string("account_email");
+            $table->string("contact_email");
             $table->string("image")->nullable();
             $table->text("identity_image")->nullable();
             $table->integer("order_count")->default(0);

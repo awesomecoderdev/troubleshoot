@@ -61,7 +61,7 @@ class ProviderResource extends JsonResource
             "identity_number",
             "contact_person_name",
             "contact_person_phone",
-            "account_email",
+            "contact_email",
             "image",
             // "identity_image",
             "order_count",
