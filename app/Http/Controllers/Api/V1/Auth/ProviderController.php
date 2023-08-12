@@ -230,9 +230,6 @@ class ProviderController extends Controller
                 'success'   => true,
                 'status'    => HTTP::HTTP_CREATED,
                 'message'   => "Provider registered successfully.",
-                'data'      => [
-                    "provider" => $provider
-                ]
             ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
