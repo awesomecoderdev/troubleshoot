@@ -28,7 +28,7 @@ class StoreProviderRequest extends FormRequest
     public function rules()
     {
         return [
-            'zone_id' => 'required|integer',
+            // 'zone_id' => 'required|integer',
             'company_name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -43,8 +43,8 @@ class StoreProviderRequest extends FormRequest
             // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             // "identity_image" => "required",
             // "order_count" => "required",
-            "service_man_count" => "required|integer",
-            "service_capacity_per_day" => "required|integer",
+            // "service_man_count" => "required|integer",
+            // "service_capacity_per_day" => "required|integer",
             // "rating_count" => "required",
             // "avg_rating" => "required",
             "commission_status" => "boolean",
