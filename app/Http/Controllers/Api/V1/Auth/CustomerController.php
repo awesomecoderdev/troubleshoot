@@ -62,7 +62,7 @@ class CustomerController extends Controller
                 'required', 'string', "min:10", "max:15",
                 Rule::exists('customers', 'phone'),
             ],
-            'otp' => 'required|numeric',
+            'otp' => 'required|string',
         ], [
             'phone.exists' => 'Customer not found.',
         ]);
@@ -102,7 +102,7 @@ class CustomerController extends Controller
 
             // If the OTP matches, update the phone_verify field to 1
             $customer->phone_verify = true;
-            $customer->otp = null;
+            // $customer->otp = null;
             $customer->save();
 
             return Response::json([
