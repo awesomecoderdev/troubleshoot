@@ -28,7 +28,6 @@ class StoreServiceRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
             "name" => "required",
             // "parent_id" => "required",
             "category_id" => "required|integer",
