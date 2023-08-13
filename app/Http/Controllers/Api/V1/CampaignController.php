@@ -18,7 +18,6 @@ use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Resources\Api\V1\ServiceResource;
 use App\Http\Resources\Api\V1\ZoneResource;
 use App\Models\Category;
-use Intervention\Image\Exception\NotFoundException;
 
 class CampaignController extends Controller
 {

@@ -278,11 +278,27 @@ class CustomerController extends Controller
 
             event(new RegisteredCustomer($customer));
 
-            // Handle image upload and storage
-            // if ($request->hasFile('image')) {
-            //     $imagePath = $request->file('image')->store('public/images');
-            //     $customer->image = str_replace('public/', '', $imagePath); // Remove 'public/' from the image path
-            // }
+            // Handle image upload and update
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = "customer_$customer->id." . $image->getClientOriginalExtension();
+                $imagePath = "assets/images/customer/$imageName";
+
+                try {
+                    // Create the "public/images" directory if it doesn't exist
+                    if (!File::isDirectory(public_path("assets/images/customer"))) {
+                        File::makeDirectory((public_path("assets/images/customer")), 0777, true, true);
+                    }
+
+                    // Save the image to the specified path
+                    $image->move(public_path('assets/images/customer'), $imageName);
+                    $customer->image = $imagePath;
+                    $customer->save();
+                } catch (\Exception $e) {
+                    //throw $e;
+                    // skip if not uploaded
+                }
+            }
 
             // Send the OTP to the user's phone
             try {
@@ -331,7 +347,6 @@ class CustomerController extends Controller
         ]);
 
         try {
-
             // Handle image upload and update
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
@@ -346,8 +361,8 @@ class CustomerController extends Controller
 
                     // Save the image to the specified path
                     $image->move(public_path('assets/images/customer'), $imageName);
-                    $imagePath = asset($imagePath);
-                    $credentials['image'] = $imagePath;
+                    $customer->image = $imagePath;
+                    $customer->save();
                 } catch (\Exception $e) {
                     //throw $e;
                     // skip if not uploaded
