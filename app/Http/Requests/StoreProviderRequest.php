@@ -34,11 +34,11 @@ class StoreProviderRequest extends FormRequest
             'last_name' => 'required|string|max:255',
             'company_name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('providers')], //unique:users,email
-            'phone' => ['required', 'string', "min:10", "max:15", Rule::unique('providers')],
+            'phone' => ['required', 'string', "min:10", "max:20", Rule::unique('providers')],
             'password' => 'required|string|min:6|max:8',
             "identity_number" => "required",
             "contact_person_name" => 'required|string|max:255',
-            "contact_person_phone" => "required|string|min:10|max:15",
+            "contact_person_phone" => "required|string|min:10|max:20",
             "contact_email" => "required|email",
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             // "identity_image" => "required",
