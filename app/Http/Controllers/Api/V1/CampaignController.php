@@ -56,7 +56,7 @@ class CampaignController extends Controller
 
             if ($request->type == "category") {
                 $categories_ids = array_unique($campaigns->pluck("category_id")->toArray());
-                $categories = Category::whereIn('id', $categories_ids)->get();
+                $categories = Category::whereIn('id', $categories_ids)->where("is_active", true)->get();
                 // $services = Service::whereIn('category_id', $categories_ids)
                 //     ->get();
                 return Response::json([
