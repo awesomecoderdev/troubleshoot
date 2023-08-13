@@ -336,16 +336,16 @@ class CustomerController extends Controller
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = "customer_$customer->id." . $image->getClientOriginalExtension();
-                $imagePath = "images/customer/$imageName";
+                $imagePath = "assets/images/customer/$imageName";
 
                 try {
                     // Create the "public/images" directory if it doesn't exist
-                    if (!File::isDirectory(public_path("images/customer"))) {
-                        File::makeDirectory((public_path("images/customer")), 0777, true, true);
+                    if (!File::isDirectory(public_path("assets/images/customer"))) {
+                        File::makeDirectory((public_path("assets/images/customer")), 0777, true, true);
                     }
 
                     // Save the image to the specified path
-                    $image->move(public_path('images/customer'), $imageName);
+                    $image->move(public_path('assets/images/customer'), $imageName);
                     $imagePath = asset($imagePath);
                     $credentials['image'] = $imagePath;
                 } catch (\Exception $e) {

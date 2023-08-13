@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Events\RegisteredHandyman;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Response as HTTP;
 use Intervention\Image\Facades\Image;
@@ -198,18 +199,23 @@ class HandymanController extends Controller
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = "handyman_$handyman->id." . $image->getClientOriginalExtension();
-                $imagePath = "public/images/$imageName";
+                $imagePath = "assets/images/handyman/$imageName";
 
-                // Create the "public/images" directory if it doesn't exist
-                if (!Storage::exists('public/images')) {
-                    Storage::makeDirectory('public/images');
+                try {
+                    // Create the "public/images" directory if it doesn't exist
+                    if (!File::isDirectory(public_path("assets/images/handyman"))) {
+                        File::makeDirectory((public_path("assets/images/handyman")), 0777, true, true);
+                    }
+
+                    // Save the image to the specified path
+                    $image->move(public_path('assets/images/handyman'), $imageName);
+                    $provider->image = $imagePath;
+                    $provider->save();
+                } catch (\Exception $e) {
+                    //throw $e;
+                    // skip if not uploaded
                 }
-
-                // Save the image to the specified path
-                Image::make($image)->resize(200, 200)->save(storage_path("app/$imagePath"));
-                $credentials['image'] = $imageName;
             }
-
             // Update the handyman data
             $handyman->update($credentials);
 

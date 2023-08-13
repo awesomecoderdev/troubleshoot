@@ -199,22 +199,20 @@ class ProviderController extends Controller
 
             event(new RegisteredProvider($provider));
 
-            // Handle image upload and storage
             // Handle image upload and update
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = "provider_$provider->id." . $image->getClientOriginalExtension();
-                $imagePath = "images/provider/$imageName";
+                $imagePath = "assets/images/provider/$imageName";
 
                 try {
                     // Create the "public/images" directory if it doesn't exist
-                    if (!File::isDirectory(public_path("images/provider"))) {
-                        File::makeDirectory((public_path("images/provider")), 0777, true, true);
+                    if (!File::isDirectory(public_path("assets/images/provider"))) {
+                        File::makeDirectory((public_path("assets/images/provider")), 0777, true, true);
                     }
 
                     // Save the image to the specified path
-                    $image->move(public_path('images/provider'), $imageName);
-                    $imagePath = asset($imagePath);
+                    $image->move(public_path('assets/images/provider'), $imageName);
                     $provider->image = $imagePath;
                     $provider->save();
                 } catch (\Exception $e) {

@@ -75,7 +75,7 @@ class Provider extends Authenticatable
     ];
 
     /**
-     * Interact with the user's first name.
+     * Interact with the user's avg_rating.
      *
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
@@ -85,6 +85,19 @@ class Provider extends Authenticatable
         $averageRating = collect($ratings)->average();
         return Attribute::make(
             get: fn ($value) => $averageRating,
+            // set: fn ($value) => strtolower($value),
+        );
+    }
+
+    /**
+     * Interact with the user's image.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value != null ? asset($value) : null,
             // set: fn ($value) => strtolower($value),
         );
     }
