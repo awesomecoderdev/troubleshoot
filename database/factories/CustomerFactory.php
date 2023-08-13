@@ -22,6 +22,7 @@ class CustomerFactory extends Factory
             "phone" => fake()->phoneNumber(),
             "email" => fake()->safeEmail(),
             "password" => fake()->password(),
+            "otp" => fake()->randomDigitNotNull(),
             "status" => true
         ];
     }

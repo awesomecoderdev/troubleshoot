@@ -31,7 +31,7 @@ class StoreCustomerRequest extends FormRequest
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
-            'phone' => ['required', 'string', Rule::unique('customers')],
+            'phone' => ['required', 'string', "min:10", "max:20", Rule::unique('customers')],
             'password' => 'required|string|min:6|max:10',
             // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'boolean', // Validate status field
