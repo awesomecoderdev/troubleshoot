@@ -29,10 +29,20 @@ class ServiceController extends Controller
         $category = $request->category_id;
         $zone = $request->zone_id;
         $validator = Validator::make($request->all(), [
-            'category_id' => 'required|integer',
+            'category_id' => 'required|integer|exists:categories,id',
             'zone_id' => 'required|integer',
             'per_page' => 'integer',
         ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'errors' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
 
         if ($validator->fails()) {
             return Response::json([

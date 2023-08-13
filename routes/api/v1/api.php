@@ -128,19 +128,16 @@ Route::group(["as" => "service.", 'prefix' => 'service', "controller" => Service
 Route::group(["as" => "campaign.", 'prefix' => 'campaign', "controller" => CampaignController::class], function () {
     Route::get('/', 'index')->name("index");
     Route::get('/{campaign}', 'show')->name("show");
-
-    // by zone
-    Route::get('/zone/{zone}', 'zone')->name("zone.show");
-    // Route::get('/service/{service}', 'service')->name("service");
+    // Route::get('/service/{campaign}', 'service')->name("service");
 });
 
-// Campaigns routes
+// Categories routes
 Route::group(["as" => "categories.", "controller" => CategoryController::class], function () {
     Route::resource('categories', CategoryController::class)->only(['index', 'show']);
     Route::get('/subcategories', 'subcategories')->name("subcategories");
 });
 
-// Campaigns routes
+// Zone routes
 Route::group(["as" => "zone.", "controller" => ZoneController::class], function () {
     Route::get('/zone', 'zone')->name("zone");
 });
