@@ -74,6 +74,7 @@ class CategoryController extends Controller
             try {
                 $categories = Category::where('parent_id', 0)
                     ->where("id", $request->category)
+                    ->where("zone_id", $request->zone_id)
                     ->where("is_active", true)
                     ->firstOrFail();
 
@@ -103,7 +104,7 @@ class CategoryController extends Controller
     public function subcategories(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'category_id' => 'required|integer|exists:categories,id',
+            'zone_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -116,7 +117,7 @@ class CategoryController extends Controller
         }
 
         try {
-            $subcategories = Category::where('parent_id', $request->category_id)
+            $subcategories = Category::where('parent_id', $request->category)
                 ->where("is_active", true)
                 ->get();
 
