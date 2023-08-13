@@ -49,6 +49,8 @@ class CampaignController extends Controller
                 return $query->where("category_id", $request->category_id);
             })->when($request->zone_id != null, function ($query) use ($request) {
                 return $query->where("zone_id", $request->zone_id);
+            })->when($request->type != null, function ($query) use ($request) {
+                return $query->where("type", $request->type);
             })->where('end', '>=', $today)->get();
 
 
