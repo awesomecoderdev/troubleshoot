@@ -330,7 +330,7 @@ class CustomerController extends Controller
                 'success'   => true,
                 'status'    => HTTP::HTTP_CREATED,
                 'message'   => "Customer registered successfully.",
-                "token" => $token
+                "verify_token" => $token
             ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
