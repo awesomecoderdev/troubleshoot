@@ -28,13 +28,9 @@ class StoreZoneRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
-            'phone' => ['required', 'string', Rule::unique('customers')],
-            'password' => 'required|string|min:6|max:10',
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'boolean', // Validate status field
+            "name" => "require|min:4|max:255",
+            "coordinates" => "string",
+            // "status" => "boolean",
         ];
     }
 

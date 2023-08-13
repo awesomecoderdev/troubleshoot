@@ -17,7 +17,13 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "parent_id" => fake()->numberBetween(1, 30),
+            "name" => fake()->name(),
+            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            "position" => fake()->randomDigitNotNull(),
+            "zone_id" => fake()->numberBetween(1, 40),
+            // "is_active" => fake(),
+            // "is_featured" => fake(),
         ];
     }
 }
