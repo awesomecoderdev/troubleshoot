@@ -17,7 +17,13 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "customer_id" => fake()->numberBetween(1, 55),
+            "street_one" => fake()->streetAddress(),
+            "street_two" =>  fake()->streetAddress(),
+            "city" => fake()->city(),
+            "zip" => fake()->numberBetween(1111, 9999),
+            "lat" => "23.747" . fake()->numberBetween(100, 600),
+            "lng" => "90.376" . fake()->numberBetween(149, 849),
         ];
     }
 }
