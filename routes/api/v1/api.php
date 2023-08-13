@@ -55,7 +55,12 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         Route::middleware(['customer:false'])->group(function () {
             Route::post('/login', 'login')->name("login");
             Route::post('/register', 'register')->name("register");
+
+            // otp routes
+            Route::post('/check-otp', 'validateOtp');
+            Route::post('/re-otp', 'regenerateOTP');
         });
+
 
         // authorization route
         Route::middleware(['customer'])->group(function () {
@@ -63,10 +68,6 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/logout', 'logout')->name("logout");
             Route::post('/update', 'update')->name("update");
             Route::post('/delete', 'delete')->name("delete");
-
-            // otp routes
-            Route::post('/check-otp', 'validateOtp');
-            Route::post('/re-otp', 'regenerateOTP');
 
             // address
             Route::get('/address', [AddressController::class, 'index'])->name("address");
