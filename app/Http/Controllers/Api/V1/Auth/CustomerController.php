@@ -325,10 +325,12 @@ class CustomerController extends Controller
                 // skip error for first time send OTP
             }
 
+            $token = $customer->createToken('authToken')->plainTextToken;
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_CREATED,
                 'message'   => "Customer registered successfully.",
+                "token" => $token
             ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
