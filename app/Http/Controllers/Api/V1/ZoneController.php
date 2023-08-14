@@ -67,8 +67,10 @@ class ZoneController extends Controller
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully Authorized.",
                 'data'      => [
-                    'zone_id' => $zone->id,
-                    'zone_name' => $zone->name,
+                    'zone' => [
+                        'zone_id' => $zone->id,
+                        'zone_name' => $zone->name,
+                    ],
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {

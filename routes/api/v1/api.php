@@ -141,6 +141,7 @@ Route::group(["as" => "campaign.", 'prefix' => 'campaign', "controller" => Campa
 Route::group(["as" => "categories.", "controller" => CategoryController::class], function () {
     Route::resource('categories', CategoryController::class)->only(['index', 'show']);
     Route::get('/subcategories/{category}', 'subcategories')->name("subcategories");
+    Route::get('/subcategories', 'allSubcategories')->name("subcategories.all");
 });
 
 // Zone routes
