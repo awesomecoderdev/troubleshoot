@@ -6,6 +6,7 @@ use App\Models\Review;
 use App\Models\Category;
 use App\Models\Provider;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Service extends Model
@@ -95,5 +96,20 @@ class Service extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+
+
+    /**
+     * Interact with the image.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value != null && file_exists(public_path($value)) ? asset($value) : null,
+            // set: fn ($value) => strtolower($value),
+        );
     }
 }

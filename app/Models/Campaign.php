@@ -34,14 +34,14 @@ class Campaign extends Model
     }
 
     /**
-     * Interact with the user's image.
+     * Interact with the image.
      *
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function image(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value != null ? asset($value) : null,
+            get: fn ($value) => $value != null && file_exists(public_path($value)) ? asset($value) : asset("assets/images/campaign/default.png"),
             // set: fn ($value) => strtolower($value),
         );
     }

@@ -11,7 +11,6 @@ class Category extends Model
 {
     use HasFactory;
 
-
     /**
      * Interact with the image.
      *
@@ -20,7 +19,7 @@ class Category extends Model
     protected function image(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value != null ? asset($value) : null,
+            get: fn ($value) => $value != null && file_exists(public_path($value)) ? asset($value) : asset("assets/images/category/default.png"),
             // set: fn ($value) => strtolower($value),
         );
     }
