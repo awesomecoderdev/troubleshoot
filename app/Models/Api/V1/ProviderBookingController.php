@@ -19,19 +19,6 @@ class ProviderBookingController extends Model
      */
     public function booking(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'zone_id' => 'required|integer',
-        ]);
-
-        if ($validator->fails()) {
-            return Response::json([
-                'success'   => false,
-                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
-                'message'   => "Validation failed.",
-                'errors' => $validator->errors()
-            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
-        }
-
         try {
             // Get the user's id from token header and get his provider bookings
             // status

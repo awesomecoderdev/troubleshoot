@@ -117,7 +117,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::get('/handyman', [ProviderHandymanController::class, 'handyman'])->name("handyman");
 
             // bookings
-            Route::get('booking', [ProviderBookingController::class, "booking"])->name("booking");
+            Route::get('/booking', [ProviderBookingController::class, "booking"])->name("booking");
         });
     });
 });

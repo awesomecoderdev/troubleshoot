@@ -28,13 +28,23 @@ class StoreBookingRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
-            'phone' => ['required', 'string', Rule::unique('customers')],
-            'password' => 'required|string|min:6|max:10',
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'boolean', // Validate status field
+            "provider_id" => "require|exists:providers,id",
+            "address_id" => "require|exists:addresses,id",
+            "customer_id" => "require|exists:customers,id",
+            "coupon_id" => "nullable|exists:coupons,id",
+            "handyman_id" => "nullable|exists:handymen,id",
+            "campaign_id" => "nullable|exists:campaigns,id",
+            "service_id" => "require|exists:services,id",
+            "category_id" => "require|exists:categories,id",
+            "zone_id" => "require|exists:zones,id",
+            "status" => "in:pending,accepted,rejected,progressing,completed",
+            // "is_paid" => "boolean",
+            "payment_method" => "in:cod,online",
+            "total_amount" => "required|string",
+            "total_tax" => "string",
+            "total_discount" => "string",
+            "additional_charge" => "string",
+            // "is_rated" => "boolean",
         ];
     }
 
