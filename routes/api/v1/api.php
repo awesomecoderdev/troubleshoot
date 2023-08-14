@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\V1\Auth\HandymanController;
 use App\Http\Controllers\Api\V1\Auth\ProviderController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
 use App\Http\Controllers\Api\V1\ProviderHandymanController;
+use App\Models\Api\V1\ProviderBookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -116,7 +117,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::get('/handyman', [ProviderHandymanController::class, 'handyman'])->name("handyman");
 
             // bookings
-            Route::get('service', ProviderServiceController::class)->except(['create', 'edit']);
+            Route::get('booking', [ProviderBookingController::class, "booking"])->name("booking");
         });
     });
 });
