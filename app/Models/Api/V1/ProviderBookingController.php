@@ -2,7 +2,7 @@
 
 namespace App\Models\Api\V1;
 
-
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Response;
@@ -23,12 +23,21 @@ class ProviderBookingController extends Model
             // Get the user's id from token header and get his provider bookings
             // status
             $provider = $request->user("providers");
+            $bookings = Booking::with([
+                "provider",
+                "category",
+                "handyman",
+                "service",
+                "zone",
+                "campaign",
+                "coupon"
+            ])->where("provider_id", $provider->id)->get();
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully authorized.",
                 'data'   => [
-                    "bookings" => $provider->bookings
+                    "bookings" => $bookings
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {

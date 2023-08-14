@@ -2,8 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Zone;
+use App\Models\Coupon;
+use App\Models\Service;
+use App\Models\Campaign;
+use App\Models\Category;
+use App\Models\Handyman;
+use App\Models\Provider;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Booking extends Model
 {
@@ -43,5 +50,67 @@ class Booking extends Model
     public function provider()
     {
         return $this->belongsTo(Provider::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Category
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Handyman
+     */
+    public function handyman()
+    {
+        return $this->belongsTo(Handyman::class);
+    }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Service
+     */
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Zone
+     */
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class)->select("id", "name",);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Campaign
+     */
+    public function campaign()
+    {
+        return $this->belongsTo(Campaign::class);
+    }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Coupon
+     */
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
     }
 }
