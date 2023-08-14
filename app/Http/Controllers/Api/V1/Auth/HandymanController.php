@@ -139,15 +139,15 @@ class HandymanController extends Controller
      */
     public function register(StoreHandymanRequest $request)
     {
+        $provider = $request->user('providers');
         try {
-
             $handyman = Handyman::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'password' => Hash::make($request->password),
-                'provider_id' => 1,
+                'provider_id' => $provider->id,
             ]);
 
             event(new RegisteredHandyman($handyman));
