@@ -30,7 +30,7 @@ class ProviderBookingController extends Controller
                 "zone",
                 "campaign",
                 "coupon",
-                "customer",
+                // "customer",
             ])->where("provider_id", $provider->id)->get();
             return Response::json([
                 'success'   => true,
