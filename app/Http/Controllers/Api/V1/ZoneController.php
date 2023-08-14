@@ -67,10 +67,8 @@ class ZoneController extends Controller
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully Authorized.",
                 'data'      => [
-                    'zone' => [
-                        'zone_id' => $zone->id,
-                        'zone_name' => $zone->name,
-                    ],
+                    'zone_id' => $zone->id,
+                    'zone_name' => $zone->name,
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
@@ -92,6 +90,37 @@ class ZoneController extends Controller
             //     'message'   => "Something went wrong. Try after sometimes.",
             //     'err' => $e->getMessage(),
             // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function zones(Request $request)
+    {
+
+        try {
+            $zones = Zone::select("id", "name")->get();
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully Authorized.",
+                'data'      => [
+                    'zones' => $zones
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Zone Unavailable.",
+                'errors' => [
+                    [
+                        'code' => 'coordinates',
+                        'message' => 'Service is not available in this area.'
+                    ]
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         }
     }
 }

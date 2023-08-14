@@ -147,4 +147,5 @@ Route::group(["as" => "categories.", "controller" => CategoryController::class],
 // Zone routes
 Route::group(["as" => "zone.", "controller" => ZoneController::class], function () {
     Route::get('/zone', 'zone')->name("zone");
+    Route::get('/zones', 'zones')->name("zones");
 });
