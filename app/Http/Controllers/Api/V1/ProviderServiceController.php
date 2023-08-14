@@ -43,6 +43,7 @@ class ProviderServiceController extends Controller
         }
     }
 
+
     /**
      * Store a newly created resource in storage.
      */
@@ -67,8 +68,9 @@ class ProviderServiceController extends Controller
                 'success'   => true,
                 'status'    => HTTP::HTTP_CREATED,
                 'message'   => "Service successfully created.",
-                "service"   => $service,
+                // "service"   => $service,
             ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
+
         } catch (\Exception $e) {
             //throw $e;
             return Response::json([
