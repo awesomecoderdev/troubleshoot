@@ -28,8 +28,6 @@ use App\Models\Api\V1\ProviderBookingController;
 |
 */
 
-
-
 // V1 Base Route.
 Route::any('/', function (Request $request) {
     return response()->json([

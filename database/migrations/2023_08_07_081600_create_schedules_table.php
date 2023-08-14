@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->integer("provider_id");
             $table->integer("booking_id");
-            $table->integer("service_id");
             $table->timestamp("date");
             $table->timestamp("start");
             $table->timestamp("end");
