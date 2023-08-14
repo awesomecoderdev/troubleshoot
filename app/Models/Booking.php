@@ -4,9 +4,11 @@ namespace App\Models;
 
 use App\Models\Zone;
 use App\Models\Coupon;
+use App\Models\Address;
 use App\Models\Service;
 use App\Models\Campaign;
 use App\Models\Category;
+use App\Models\Customer;
 use App\Models\Handyman;
 use App\Models\Provider;
 use Illuminate\Database\Eloquent\Model;
@@ -112,5 +114,25 @@ class Booking extends Model
     public function coupon()
     {
         return $this->belongsTo(Coupon::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Address
+     */
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Customer
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class)->with("address");
     }
 }
