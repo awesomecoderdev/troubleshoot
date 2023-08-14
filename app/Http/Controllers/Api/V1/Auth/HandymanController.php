@@ -197,7 +197,7 @@ class HandymanController extends Controller
             // Handle image upload and update
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = "handyman_$handyman->id." . $image->getClientOriginalExtension();
+                $imageName = "handyman_$handyman->id.png";
                 $imagePath = "assets/images/handyman/$imageName";
 
                 try {
@@ -208,8 +208,7 @@ class HandymanController extends Controller
 
                     // Save the image to the specified path
                     $image->move(public_path('assets/images/handyman'), $imageName);
-                    $provider->image = $imagePath;
-                    $provider->save();
+                    $credentials["image"] = $imagePath;
                 } catch (\Exception $e) {
                     //throw $e;
                     // skip if not uploaded

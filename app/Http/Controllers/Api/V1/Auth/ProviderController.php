@@ -202,7 +202,7 @@ class ProviderController extends Controller
             // Handle image upload and update
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = "provider_$provider->id." . $image->getClientOriginalExtension();
+                $imageName = "provider_$provider->id.png";
                 $imagePath = "assets/images/provider/$imageName";
 
                 try {

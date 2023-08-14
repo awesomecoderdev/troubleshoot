@@ -291,7 +291,7 @@ class CustomerController extends Controller
             // Handle image upload and update
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = "customer_$customer->id." . $image->getClientOriginalExtension();
+                $imageName = "customer_$customer->id.png";
                 $imagePath = "assets/images/customer/$imageName";
 
                 try {
@@ -362,7 +362,7 @@ class CustomerController extends Controller
             // Handle image upload and update
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = "customer_$customer->id." . $image->getClientOriginalExtension();
+                $imageName = "customer_$customer->id.png";
                 $imagePath = "assets/images/customer/$imageName";
 
                 try {
@@ -373,10 +373,9 @@ class CustomerController extends Controller
 
                     // Save the image to the specified path
                     $image->move(public_path('assets/images/customer'), $imageName);
-                    $customer->image = $imagePath;
-                    $customer->save();
+                    $credentials["image"] = $imagePath;
                 } catch (\Exception $e) {
-                    //throw $e;
+                    // throw $e;
                     // skip if not uploaded
                 }
             }
