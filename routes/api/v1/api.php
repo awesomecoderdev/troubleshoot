@@ -13,9 +13,9 @@ use App\Http\Controllers\Api\V1\CampaignZoneController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
 use App\Http\Controllers\Api\V1\Auth\HandymanController;
 use App\Http\Controllers\Api\V1\Auth\ProviderController;
+use App\Http\Controllers\Api\V1\ProviderBookingController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
 use App\Http\Controllers\Api\V1\ProviderHandymanController;
-use App\Models\Api\V1\ProviderBookingController;
 
 /*
 |--------------------------------------------------------------------------
