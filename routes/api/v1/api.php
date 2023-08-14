@@ -116,6 +116,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
             // bookings
             Route::get('/booking', [ProviderBookingController::class, "booking"])->name("booking");
+            Route::post('/booking/update', [ProviderBookingController::class, "change"])->name("booking.change");
         });
     });
 });
