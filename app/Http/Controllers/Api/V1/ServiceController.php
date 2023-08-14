@@ -176,6 +176,34 @@ class ServiceController extends Controller
         }
     }
 
+
+    /**
+     * Display the specified resource.
+     */
+    public function details(Service $service)
+    {
+
+        try {
+            $service->load(["provider", "reviews"]);
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully authorized.",
+                'data'      => [
+                    'service'  => $service
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            throw $e;
+            // return Response::json([
+            //     'success'   => false,
+            //     'status'    => HTTP::HTTP_FORBIDDEN,
+            //     'message'   => "Something went wrong. Try after sometimes.",
+            //     'err' => $e->getMessage(),
+            // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
     /**
      * Display the specified resource.
      */
