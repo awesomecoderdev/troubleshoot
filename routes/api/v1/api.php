@@ -1,20 +1,20 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\ZoneController;
 use App\Http\Controllers\Api\V1\AddressController;
+use App\Http\Controllers\Api\V1\ServiceController;
+use App\Http\Controllers\Api\V1\CampaignController;
+use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\Auth\UserController;
+use App\Http\Controllers\Api\V1\CsrfTokenController;
+use App\Http\Controllers\Api\V1\CampaignZoneController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
 use App\Http\Controllers\Api\V1\Auth\HandymanController;
 use App\Http\Controllers\Api\V1\Auth\ProviderController;
-use App\Http\Controllers\Api\V1\Auth\UserController;
-use App\Http\Controllers\Api\V1\CampaignController;
-use App\Http\Controllers\Api\V1\CampaignZoneController;
-use App\Http\Controllers\Api\V1\CategoryController;
-use App\Http\Controllers\Api\V1\CsrfTokenController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
-use App\Http\Controllers\Api\V1\ServiceController;
-use App\Http\Controllers\Api\V1\ZoneController;
-use App\Http\Controllers\ProviderHandymanController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\ProviderHandymanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,6 +114,9 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
             //handyman
             Route::get('/handyman', [ProviderHandymanController::class, 'handyman'])->name("handyman");
+
+            // bookings
+            Route::get('service', ProviderServiceController::class)->except(['create', 'edit']);
         });
     });
 });

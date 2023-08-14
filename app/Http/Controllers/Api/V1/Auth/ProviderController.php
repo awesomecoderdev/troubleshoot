@@ -142,7 +142,7 @@ class ProviderController extends Controller
                 ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
             }
 
-            $provider->tokens()->delete();
+            // $provider->tokens()->delete(); // for live need to enable
             $token = $provider->createToken('authToken')->plainTextToken;
 
             return Response::json([

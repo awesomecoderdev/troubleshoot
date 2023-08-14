@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Response;
 use App\Http\Resources\Api\V1\HandymanResource;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreScheduleRequest;
+use App\Http\Requests\UpdateScheduleRequest;
+use App\Models\Schedule;
 
 class ProviderHandymanController extends Controller
 {

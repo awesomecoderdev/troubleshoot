@@ -1,10 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Review;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response as HTTP;
+use Illuminate\Support\Facades\Response;
+use App\Http\Resources\Api\V1\HandymanResource;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReviewRequest;
 use App\Http\Requests\UpdateReviewRequest;
-use App\Models\Review;
+
 
 class ReviewController extends Controller
 {
