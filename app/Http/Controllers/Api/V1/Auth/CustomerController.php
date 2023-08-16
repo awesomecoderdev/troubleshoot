@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
+use App\Models\Address;
 use App\Models\Customer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -19,9 +20,9 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use Illuminate\Support\Facades\Http as Client;
 use App\Http\Resources\Api\V1\CustomerResource;
 use App\Http\Requests\Api\V1\CustomerLoginRequest;
-use App\Models\Address;
 
 class CustomerController extends Controller
 {
@@ -271,6 +272,34 @@ class CustomerController extends Controller
      */
     public function register(StoreCustomerRequest $request)
     {
+        $address = new Address();
+        $address->lat = $request->lat;
+        $address->lng = $request->lng;
+        $address->street_one = "";
+        $address->city = "";
+        $address->zip = "";
+
+        try {
+            //code...
+            // $response = Client::acceptJson()->get('https://maps.googleapis.com/maps/api/geocode/json', [
+            //     "key" => env("GOOGLE_MAP_API"),
+            //     "latlng" => "$request->lat,$request->lng"
+            // ]);
+            // ->->connectTimeout(3);
+            $response = Client::withOptions(["verify" => false])->acceptJson()->get("http://ip-api.com/json", [
+                "lat" => $request->lat,
+                "lng" => $request->lng,
+            ]);
+
+            if ($response->successful()) {
+                $address->city = $response->json("city");
+                $address->zip = $response->json("zip");
+            }
+            // return $response;
+        } catch (\Exception $e) {
+            // throw $e;
+        }
+
         try {
             // If the user is not registered, proceed with registration
             $otp = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
@@ -287,11 +316,11 @@ class CustomerController extends Controller
                 'otp' => $otp, // Save the generated OTP
             ]);
 
-            // $address = new Address();
-            // $address->lat = $request->lat;
-            // $address->lng = $request->lng;
-
             event(new RegisteredCustomer($customer));
+
+            $address->customer_id = $customer->id;
+            $address->save();
+
 
             // Handle image upload and update
             if ($request->hasFile('image')) {
