@@ -113,6 +113,8 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
             //handyman
             Route::get('/handyman', [ProviderHandymanController::class, 'handyman'])->name("handyman");
+            // get handyman
+            Route::get('/handyman/{handyman}', [ProviderHandymanController::class, 'show'])->name("details");
 
             // bookings
             Route::get('/booking', [ProviderBookingController::class, "booking"])->name("booking");
