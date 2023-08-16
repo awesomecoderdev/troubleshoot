@@ -21,6 +21,7 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\Api\V1\CustomerResource;
 use App\Http\Requests\Api\V1\CustomerLoginRequest;
+use App\Models\Address;
 
 class CustomerController extends Controller
 {
@@ -285,6 +286,10 @@ class CustomerController extends Controller
                 'ref' => $this->generateUniqueRefCode($request->phone),
                 'otp' => $otp, // Save the generated OTP
             ]);
+
+            // $address = new Address();
+            // $address->lat = $request->lat;
+            // $address->lng = $request->lng;
 
             event(new RegisteredCustomer($customer));
 

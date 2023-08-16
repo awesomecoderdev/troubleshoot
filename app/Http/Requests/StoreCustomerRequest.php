@@ -35,6 +35,8 @@ class StoreCustomerRequest extends FormRequest
             'password' => 'required|string|min:6|max:10',
             // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'boolean', // Validate status field
+            'lat' => "required|string",
+            'lng' => "required|string",
         ];
     }
 
