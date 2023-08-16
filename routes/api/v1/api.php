@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\CampaignZoneController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
 use App\Http\Controllers\Api\V1\Auth\HandymanController;
 use App\Http\Controllers\Api\V1\Auth\ProviderController;
+use App\Http\Controllers\Api\V1\CustomerBookingController;
 use App\Http\Controllers\Api\V1\ProviderBookingController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
 use App\Http\Controllers\Api\V1\ProviderHandymanController;
@@ -72,9 +73,9 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::get('/address', [AddressController::class, 'index'])->name("address");
             Route::post('/address/update', [AddressController::class, 'update'])->name("address.update");
 
-            // booking
-            Route::get('/address', [AddressController::class, 'index'])->name("address");
-            Route::post('/address/update', [AddressController::class, 'update'])->name("address.update");
+            // bookings
+            Route::get('/booking', [CustomerBookingController::class, "booking"])->name("booking");
+            Route::post('/booking/update', [CustomerBookingController::class, "change"])->name("booking.change");
         });
     });
 
