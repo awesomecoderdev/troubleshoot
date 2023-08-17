@@ -78,6 +78,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::get('/booking', [CustomerBookingController::class, "booking"])->name("booking");
             Route::post('/booking/register', [CustomerBookingController::class, "register"])->name("booking.register");
             Route::post('/booking/update', [CustomerBookingController::class, "change"])->name("booking.change");
+            Route::get('/booking/details/{booking}', [CustomerBookingController::class, "details"])->name("booking.details");
         });
     });
 

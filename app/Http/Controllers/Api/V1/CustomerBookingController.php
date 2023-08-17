@@ -170,4 +170,42 @@ class CustomerBookingController extends Controller
             // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }
+
+    /**
+     * Retrieve update info.
+     */
+    public function details(Request $request)
+    {
+        try {
+            // Get the user's id from token header and get his provider bookings
+            $customer = $request->user("customers");
+            $booking = Booking::with([
+                "provider",
+                "category",
+                "handyman",
+                "service",
+                "zone",
+                "campaign",
+                "coupon",
+                "customer",
+            ])->where("id", $request->booking)->where("customer_id", $customer->id)->firstOrFail();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully Authorized.",
+                "data"      => [
+                    "booking" => $booking
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            throw $e;
+            // return Response::json([
+            //     'success'   => false,
+            //     'status'    => HTTP::HTTP_FORBIDDEN,
+            //     'message'   => "Something went wrong. Try after sometimes.",
+            //     'err' => $e->getMessage(),
+            // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
 }
