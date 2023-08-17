@@ -30,9 +30,9 @@ class UpdateHandymanRequest extends FormRequest
     {
         return [
             'phone' => "required|min:10|max:15|unique:handymen,phone,$this->handyman_id",
-            'email' => "required|min:10|max:15|unique:handymen,email,$this->handyman_id",
+            'email' => "required|unique:handymen,email,$this->handyman_id",
             'handyman_id' => 'required|integer|exists:handymen,id',
-            'name' => 'required|string|min:4|max:255',
+            'name' => 'required|string|min:3|max:255',
             'password' => 'required|string|min:6|max:10',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:1',
             'address' => 'required|string',
