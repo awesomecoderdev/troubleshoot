@@ -20,8 +20,7 @@ return new class extends Migration
             $table->string("phone");
             $table->string("image")->nullable();
             $table->text("address");
-            $table->integer("rating")->default(0);
-            $table->integer("rating_count")->default(0);
+            $table->enum("status", ["available", "unavailable"])->default("available");
             $table->timestamps();
         });
     }

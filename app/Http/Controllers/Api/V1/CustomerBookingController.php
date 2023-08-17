@@ -6,6 +6,8 @@ use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBookingRequest;
+use App\Models\Campaign;
+use App\Models\Coupon;
 use App\Models\Service;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Response;
@@ -107,6 +109,8 @@ class CustomerBookingController extends Controller
             $customer = $request->user("customers");
             $customer->load("address");
             $service = Service::where("id", $request->service_id)->where("status", true)->firstOrFail();
+            $coupon = Coupon::where("id", $request->input("coupon_id", 0))->first();
+            $campaign = Campaign::where("id", $request->input("campaign_id", 0))->first();
 
             // need to calculate total tax etc
             $total_amount = intval($service->price);
@@ -122,6 +126,13 @@ class CustomerBookingController extends Controller
             $booking->provider_id = $service->provider_id;
             $booking->title = $request->title;
             $booking->hint = $request->hint;
+
+            $booking->metadata = [
+                "service" => $service,
+                "customer" => $customer,
+                "coupon" => $coupon,
+                "campaign" => $campaign,
+            ];
 
             $booking->coupon_id = $request->input("coupon_id", 0);
             $booking->campaign_id = $request->input("campaign_id", 0);

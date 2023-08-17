@@ -12,6 +12,7 @@ use App\Models\Customer;
 use App\Models\Handyman;
 use App\Models\Provider;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Booking extends Model
@@ -37,11 +38,23 @@ class Booking extends Model
         "status",
         "is_paid",
         "payment_method",
+        "title",
+        "hint",
+        "metadata",
         "total_amount",
         "total_tax",
         "total_discount",
         "additional_charge",
         "is_rated",
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'metadata' => AsCollection::class,
     ];
 
     /**

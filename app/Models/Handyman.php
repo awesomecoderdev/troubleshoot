@@ -30,8 +30,7 @@ class Handyman  extends Authenticatable
         "phone",
         "image",
         "address",
-        "rating",
-        "rating_count",
+        "status",
     ];
 
     /**

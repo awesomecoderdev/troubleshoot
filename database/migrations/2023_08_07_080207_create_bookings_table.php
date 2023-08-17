@@ -27,6 +27,7 @@ return new class extends Migration
             $table->enum("payment_method", ["cod", "online"])->default("cod");
             $table->string("title")->nullable();
             $table->text("hint");
+            $table->text("metadata");
             $table->string("total_amount");
             $table->string("total_tax")->default("0");
             $table->string("total_discount")->default("0");
