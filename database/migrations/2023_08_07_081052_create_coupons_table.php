@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer("provider_id");
             $table->string("name");
-            $table->string("code");
+            $table->string("code")->unique();
             $table->integer("discount");
             $table->timestamp("start");
             $table->timestamp("end");

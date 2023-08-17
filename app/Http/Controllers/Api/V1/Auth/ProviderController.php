@@ -133,6 +133,7 @@ class ProviderController extends Controller
                     'errors' => 'Invalid credentials.'
                 ],  HTTP::HTTP_UNAUTHORIZED); // HTTP::HTTP_OK
             }
+
             if ($provider->phone_verify === 0) {
                 return Response::json([
                     'success'   => false,

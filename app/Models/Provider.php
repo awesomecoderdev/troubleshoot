@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Models\Coupon;
 use App\Models\Review;
 use DateTimeInterface;
 use App\Models\Booking;
@@ -132,7 +133,6 @@ class Provider extends Authenticatable
         return $this->hasMany(Handyman::class)->orderBy('created_at', 'desc');
     }
 
-
     /**
      * Display the specified resource.
      *
@@ -142,6 +142,17 @@ class Provider extends Authenticatable
     {
         return $this->hasMany(Review::class)->orderBy('created_at', 'desc');
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Coupon
+     */
+    public function coupons()
+    {
+        return $this->hasMany(Coupon::class)->orderBy('created_at', 'desc');
+    }
+
 
     /**
      * Interact with the user's first name.

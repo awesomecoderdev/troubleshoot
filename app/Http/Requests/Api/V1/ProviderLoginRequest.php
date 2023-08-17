@@ -31,8 +31,8 @@ class ProviderLoginRequest extends FormRequest
             // 'first_name' => 'required|string|max:255',
             // 'last_name' => 'required|string|max:255',
             // 'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
-            'login_field' => 'required',
-            'password' => 'required|string',
+            'login_field' => 'required|string',
+            'password' => 'required|string|min:6|max:10',
         ];
     }
 

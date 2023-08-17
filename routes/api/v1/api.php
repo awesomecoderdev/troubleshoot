@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\V1\Auth\HandymanController;
 use App\Http\Controllers\Api\V1\Auth\ProviderController;
 use App\Http\Controllers\Api\V1\CustomerBookingController;
 use App\Http\Controllers\Api\V1\ProviderBookingController;
+use App\Http\Controllers\Api\V1\ProviderCouponController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
 use App\Http\Controllers\Api\V1\ProviderHandymanController;
 
@@ -121,6 +122,9 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             // bookings
             Route::get('/booking', [ProviderBookingController::class, "booking"])->name("booking");
             Route::post('/booking/update', [ProviderBookingController::class, "change"])->name("booking.change");
+
+            // provider coupons crud route
+            Route::resource('coupon', ProviderCouponController::class)->except(['create', 'edit']);
         });
     });
 });
