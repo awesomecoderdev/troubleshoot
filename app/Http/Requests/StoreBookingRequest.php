@@ -15,10 +15,10 @@ class StoreBookingRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
-    {
-        return false;
-    }
+    // public function authorize(): bool
+    // {
+    //     return false;
+    // }
 
     /**
      * Get the validation rules that apply to the request.
@@ -28,22 +28,22 @@ class StoreBookingRequest extends FormRequest
     public function rules()
     {
         return [
-            "provider_id" => "require|exists:providers,id",
-            "address_id" => "require|exists:addresses,id",
-            "customer_id" => "require|exists:customers,id",
+            // "provider_id" => "required|exists:providers,id",
+            // "address_id" => "required|exists:addresses,id",
+            // "customer_id" => "required|exists:customers,id",
             "coupon_id" => "nullable|exists:coupons,id",
-            "handyman_id" => "nullable|exists:handymen,id",
-            "campaign_id" => "nullable|exists:campaigns,id",
-            "service_id" => "require|exists:services,id",
-            "category_id" => "require|exists:categories,id",
-            "zone_id" => "require|exists:zones,id",
-            "status" => "in:pending,accepted,rejected,progressing,completed",
+            // "handyman_id" => "nullable|exists:handymen,id",
+            // "campaign_id" => "nullable|exists:campaigns,id",
+            "service_id" => "required|exists:services,id",
+            // "category_id" => "required|exists:categories,id",
+            // "zone_id" => "required|exists:zones,id",
+            // "status" => "in:pending,accepted,rejected,progressing,completed",
             // "is_paid" => "boolean",
-            "payment_method" => "in:cod,online",
-            "total_amount" => "required|string",
-            "total_tax" => "string",
-            "total_discount" => "string",
-            "additional_charge" => "string",
+            "payment_method" => "required|in:cod,online",
+            // "total_amount" => "required|string",
+            // "total_tax" => "string",
+            // "total_discount" => "string",
+            // "additional_charge" => "string",
             // "is_rated" => "boolean",
         ];
     }
