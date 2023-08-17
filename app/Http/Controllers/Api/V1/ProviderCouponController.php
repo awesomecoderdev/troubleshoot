@@ -69,7 +69,7 @@ class ProviderCouponController extends Controller
                 'message'   => "Service successfully created.",
                 // "service"   => $service,
                 "data" => [
-                    "request" => $request->all()
+                    "request" => $request->all(),
                 ]
             ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
 

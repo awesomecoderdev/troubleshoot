@@ -28,13 +28,25 @@ class UpdateBookingRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers')], //unique:users,email
-            'phone' => ['required', 'string', Rule::unique('customers')],
-            'password' => 'required|string|min:6|max:10',
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'boolean', // Validate status field
+            // "provider_id" => "required|exists:providers,id",
+            // "address_id" => "required|exists:addresses,id",
+            // "customer_id" => "required|exists:customers,id",
+            "title" => "required|string|min:10|max:150",
+            "hint" => "required|string|min:10|max:450",
+            "coupon_id" => "nullable|exists:coupons,id",
+            // "handyman_id" => "nullable|exists:handymen,id",
+            // "campaign_id" => "nullable|exists:campaigns,id",
+            "service_id" => "required|exists:services,id",
+            // "category_id" => "required|exists:categories,id",
+            // "zone_id" => "required|exists:zones,id",
+            // "status" => "in:pending,accepted,rejected,progressing,completed",
+            // "is_paid" => "boolean",
+            "payment_method" => "required|in:cod,online",
+            // "total_amount" => "required|string",
+            // "total_tax" => "string",
+            // "total_discount" => "string",
+            // "additional_charge" => "string",
+            // "is_rated" => "boolean",
         ];
     }
 

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum("status", ["pending", "accepted", "rejected", "progressing", "cancelled", "completed"])->default("pending");
             $table->boolean("is_paid")->default(false);
             $table->enum("payment_method", ["cod", "online"])->default("cod");
+            $table->string("title")->nullable();
             $table->text("hint");
             $table->string("total_amount");
             $table->string("total_tax")->default("0");

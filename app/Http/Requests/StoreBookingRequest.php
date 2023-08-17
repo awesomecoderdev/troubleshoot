@@ -31,6 +31,8 @@ class StoreBookingRequest extends FormRequest
             // "provider_id" => "required|exists:providers,id",
             // "address_id" => "required|exists:addresses,id",
             // "customer_id" => "required|exists:customers,id",
+            "title" => "required|string|min:10|max:150",
+            "hint" => "required|string|min:10|max:450",
             "coupon_id" => "nullable|exists:coupons,id",
             // "handyman_id" => "nullable|exists:handymen,id",
             // "campaign_id" => "nullable|exists:campaigns,id",

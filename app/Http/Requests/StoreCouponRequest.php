@@ -28,9 +28,8 @@ class StoreCouponRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            // 'provider_id' => 'required|exists:providers,id',
             "name" => "required|string|min:3|max:25",
+            "code" => "required|string|min:3|max:25",
             "discount" => "required|integer",
             "start" => "required",
             "end" => "required",
