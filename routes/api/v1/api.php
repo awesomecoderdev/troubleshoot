@@ -13,9 +13,10 @@ use App\Http\Controllers\Api\V1\CampaignZoneController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
 use App\Http\Controllers\Api\V1\Auth\HandymanController;
 use App\Http\Controllers\Api\V1\Auth\ProviderController;
-use App\Http\Controllers\Api\V1\CustomerBookingController;
-use App\Http\Controllers\Api\V1\ProviderBookingController;
 use App\Http\Controllers\Api\V1\ProviderCouponController;
+use App\Http\Controllers\Api\V1\CustomerBookingController;
+use App\Http\Controllers\Api\V1\HandymanBookingController;
+use App\Http\Controllers\Api\V1\ProviderBookingController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
 use App\Http\Controllers\Api\V1\ProviderHandymanController;
 
@@ -62,7 +63,6 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/re-otp', 'regenerateOTP');
         });
 
-
         // authorization route
         Route::middleware(['customer'])->group(function () {
             Route::get('/', 'customer')->name("customer");
@@ -95,6 +95,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         Route::middleware(['handyman'])->group(function () {
             Route::get('/', 'handyman')->name("handyman");
             Route::post('/logout', 'logout')->name("logout");
+            Route::get('/service', [HandymanBookingController::class, 'service'])->name("service");
         });
     });
 
@@ -122,6 +123,8 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             // bookings
             Route::get('/booking', [ProviderBookingController::class, "booking"])->name("booking");
             Route::post('/booking/update', [ProviderBookingController::class, "change"])->name("booking.change");
+            Route::post('/booking/handover', [ProviderBookingController::class, 'handover'])->name("handover");
+            Route::get('/booking/details/{booking}', [ProviderBookingController::class, "details"])->name("booking.details");
 
             // provider coupons crud route
             Route::resource('coupon', ProviderCouponController::class)->except(['create', 'edit']);

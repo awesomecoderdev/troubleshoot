@@ -58,8 +58,7 @@ class HandymanResource extends JsonResource
             "phone",
             "image",
             "address",
-            "rating",
-            "rating_count",
+            "status"
             // Add other user data as needed
         ]);
     }

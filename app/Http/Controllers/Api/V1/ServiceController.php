@@ -43,16 +43,6 @@ class ServiceController extends Controller
             ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
         }
 
-
-        if ($validator->fails()) {
-            return Response::json([
-                'success'   => false,
-                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
-                'message'   => "Validation failed.",
-                'errors' => $validator->errors()
-            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
-        }
-
         try {
             $params = Arr::only($request->input(), ["category_id", "zone_id"]);
             $services = Service::where('category_id', $category)->where('zone_id', $zone)->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
