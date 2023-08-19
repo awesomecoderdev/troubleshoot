@@ -123,10 +123,11 @@ class ProviderBookingController extends Controller
         try {
             // Get the user's id from token header and get his provider bookings
             $provider = $request->user("providers");
-            $booking = Booking::where("id", $request->booking_id)->where("handyman_id", 0)->where("provider_id", $provider->id)->firstOrFail();
+            $booking = Booking::where("id", $request->booking_id)->where("status", "accepted")->where("handyman_id", 0)->where("provider_id", $provider->id)->firstOrFail();
             $handyman = Handyman::where("id", $request->handyman_id)->where("status", "available")->where("provider_id", $provider->id)->firstOrFail();
 
             $booking->handyman_id = $handyman->id;
+            $booking->status = "progressing";
             $booking->save();
 
             $handyman->status = "unavailable";
