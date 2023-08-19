@@ -108,11 +108,85 @@ class CustomerBookingController extends Controller
     public function register(StoreBookingRequest $request)
     {
         try {
+            $errors = [];
+            $calculation = [];
+            $today = Carbon::today();
             $customer = $request->user("customers");
             $customer->load("address");
             $service = Service::where("id", $request->service_id)->where("status", true)->firstOrFail();
-            $coupon = Coupon::where("id", $request->input("coupon_id", 0))->first();
+            $coupon = Coupon::where("provider_id", $service->provider_id)->where("code", $request->input("coupon", 0))->first();
             $campaign = Campaign::where("id", $request->input("campaign_id", 0))->first();
+            $service = Service::where("id", $request->service_id)->firstOrFail();
+
+            // data
+            $price = intval($service->price);
+            $discount = $service->discount;
+            $tax = $price * ($service->tax / 100);;
+            // discount price
+            $discountPrice = $price - $discount;
+            // with tax
+            $withTax = $discountPrice + $tax;
+
+            if ($coupon && $coupon->end >= $today) { // with coupon
+                // coupon minimum amount
+                if ($withTax < $coupon->min_amount) {
+                    $totalAmount = $withTax;
+                    $calculation = [
+                        "price" => $price,
+                        "discount" => $discount,
+                        "with_discount" => $discountPrice,
+                        "tax" => $service->tax,
+                        "total_tax" => $tax,
+                        "with_tax" => $withTax,
+                        "with_coupon" => $totalAmount,
+                        "without_coupon" => $withTax,
+                        "total_amount" => $totalAmount,
+                    ];
+                    $errors = [
+                        "errors" => [
+                            "coupon" => [
+                                "To get coupon discount, minimum requirements is ৳$coupon->min_amount order."
+                            ]
+                        ]
+                    ];
+                } else {
+                    // with coupon
+                    $totalAmount = $withTax - $coupon->discount;
+                    $calculation = [
+                        "price" => $price,
+                        "discount" => $discount,
+                        "with_discount" => $discountPrice,
+                        "tax" => $service->tax,
+                        "total_tax" => $tax,
+                        "with_tax" => $withTax,
+                        "with_coupon" => $totalAmount,
+                        "without_coupon" => $withTax,
+                        "total_amount" => $totalAmount,
+                    ];
+                }
+            } else { // without coupon
+                $totalAmount = $withTax;
+
+                $calculation = [
+                    "price" => $price,
+                    "discount" => $discount,
+                    "with_discount" => $discountPrice,
+                    "tax" => $service->tax,
+                    "total_tax" => $tax,
+                    "with_tax" => $withTax,
+                    "with_coupon" => $totalAmount,
+                    "without_coupon" => $withTax,
+                    "total_amount" => $totalAmount,
+                ];
+                $errors = [
+                    "errors" => [
+                        "coupon" => [
+                            "Invalid Coupon Code."
+                        ]
+                    ]
+                ];
+            }
+
 
             // need to calculate total tax etc
             $total_amount = intval($service->price);
@@ -134,6 +208,7 @@ class CustomerBookingController extends Controller
                 "customer" => $customer,
                 "coupon" => $coupon,
                 "campaign" => $campaign,
+                "calculation" => $calculation
             ];
 
             $booking->coupon_id = $request->input("coupon_id", 0);
@@ -152,16 +227,19 @@ class CustomerBookingController extends Controller
             $booking->is_rated = false; // that mean booking is not given rating
             $booking->save();
 
-            return Response::json([
-                'success'   => true,
-                'status'    => HTTP::HTTP_CREATED,
-                'message'   => "Booking successfully created.",
-                // "data"      => [
-                // "customer" => $customer,
-                // "booking" => $booking,
-                // "service" => $service
-                // ]
-            ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
+            return Response::json(
+                [
+                    'success'   => true,
+                    'status'    => HTTP::HTTP_CREATED,
+                    'message'   => "Booking successfully created.",
+                    // "data"      => [
+                    // "customer" => $customer,
+                    // "booking" => $booking,
+                    // "service" => $service
+                    // ]
+                ],
+                HTTP::HTTP_CREATED
+            ); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             throw $e;
             // return Response::json([
@@ -240,7 +318,7 @@ class CustomerBookingController extends Controller
             $coupon = Coupon::where("provider_id", $service->provider_id)->where("code", $request->coupon)->where("end", '>=', $today)->first();
 
             // data
-            $price = abs($service->price);
+            $price = intval($service->price);
             $discount = $service->discount;
             $tax = $price * ($service->tax / 100);;
 
