@@ -46,6 +46,7 @@ class Booking extends Model
         "total_discount",
         "additional_charge",
         "is_rated",
+        "schedule"
     ];
 
     /**

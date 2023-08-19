@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string("total_discount")->default("0");
             $table->string("additional_charge")->default("0");
             $table->boolean("is_rated")->default(false);
+            $table->timestamp("schedule")->useCurrent();
             $table->timestamps();
         });
     }

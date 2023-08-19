@@ -180,10 +180,13 @@ class HandymanController extends Controller
             'name',
             'email',
             'phone',
-            'password',
             'image',
             'address'
         ]);
+
+        if ($request->filled("password")) {
+            $credentials['password'] = Hash::make($request->password);
+        }
 
         try {
             if ($handyman->provider_id != $provider->id) {
