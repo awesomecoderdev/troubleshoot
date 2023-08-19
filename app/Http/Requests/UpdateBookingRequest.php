@@ -46,6 +46,7 @@ class UpdateBookingRequest extends FormRequest
             // "total_tax" => "string",
             // "total_discount" => "string",
             // "additional_charge" => "string",
+            "schedule" => "date_format:Y-m-d"
             // "is_rated" => "boolean",
         ];
     }

@@ -225,6 +225,7 @@ class CustomerBookingController extends Controller
             $booking->total_discount = $total_discount;
             $booking->additional_charge = $additional_charge;
             $booking->is_rated = false; // that mean booking is not given rating
+            $booking->schedule = Carbon::parse($request->schedule)->startOfDay();
             $booking->save();
 
             return Response::json(
