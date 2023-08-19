@@ -104,9 +104,10 @@ class ProviderBookingController extends Controller
      */
     public function handover(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'booking_id' => 'required|integer|exists:bookings,id',
-            "handyman_id" => 'required|exists:handyman,id'
+            "handyman_id" => 'required|exists:handymen,id'
         ]);
 
         // "available", "unavailable"
@@ -135,9 +136,9 @@ class ProviderBookingController extends Controller
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully updated.",
-                // "data"      => [
-                //     "booking" => $booking
-                // ]
+                "data"      => [
+                    "booking" => $booking
+                ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             throw $e;

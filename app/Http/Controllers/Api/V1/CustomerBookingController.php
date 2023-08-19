@@ -240,7 +240,7 @@ class CustomerBookingController extends Controller
             $coupon = Coupon::where("provider_id", $service->provider_id)->where("code", $request->coupon)->where("end", '>=', $today)->first();
 
             // data
-            $price = $service->price;
+            $price = abs($service->price);
             $discount = $service->discount;
             $tax = $price * ($service->tax / 100);;
 
