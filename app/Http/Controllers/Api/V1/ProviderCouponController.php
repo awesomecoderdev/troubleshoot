@@ -51,6 +51,16 @@ class ProviderCouponController extends Controller
     public function store(StoreCouponRequest $request)
     {
         $provider = $request->user("providers");
+        $coupon = Coupon::where("code", $request->code)->orderBy("id", "DESC")->first();
+
+        if ($coupon) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Coupon already exists.",
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+
         try {
             $coupon = new Coupon();
             $coupon->provider_id = $provider->id;
@@ -66,10 +76,10 @@ class ProviderCouponController extends Controller
                 'success'   => true,
                 'status'    => HTTP::HTTP_CREATED,
                 'message'   => "Coupon successfully created.",
-                // "data" => [
-                //     // "request" => $request->all(),
-                //     "coupon" => $coupon,
-                // ]
+                "data" => [
+                    // "request" => $request->all(),
+                    "coupon" => $coupon,
+                ]
             ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
 
         } catch (\Exception $e) {
