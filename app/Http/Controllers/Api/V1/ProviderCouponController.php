@@ -13,6 +13,8 @@ use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Resources\Api\V1\ProviderResource;
 use App\Http\Resources\Api\V1\ServiceResource;
+use App\Models\Coupon;
+use Carbon\Carbon;
 
 class ProviderCouponController extends Controller
 {
@@ -50,27 +52,24 @@ class ProviderCouponController extends Controller
     {
         $provider = $request->user("providers");
         try {
-            // $service = Service::create([
-            //     "name" => $request->name,
-            //     "price" => $request->price,
-            //     "type" => $request->type,
-            //     "duration" => $request->duration,
-            //     "discount" => $request->discount,
-            //     "short_description" => $request->short_description,
-            //     "long_description" => $request->long_description,
-            //     "tax" => $request->tax,
-            //     "category_id" => $request->category_id,
-            //     "provider_id" => $provider->id,
-            //     "zone_id" => $provider->zone_id,
-            // ]);
+            $coupon = new Coupon();
+            $coupon->provider_id = $provider->id;
+            $coupon->name = $request->name;
+            $coupon->code = $request->code;
+            $coupon->discount = $request->discount;
+            $coupon->start = Carbon::parse($request->start)->startOfDay();
+            $coupon->end = Carbon::parse($request->end)->endOfDay();
+            $coupon->min_amount = $request->min_amount;
+            $coupon->save();
+
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_CREATED,
-                'message'   => "Service successfully created.",
-                // "service"   => $service,
-                "data" => [
-                    "request" => $request->all(),
-                ]
+                'message'   => "Coupon successfully created.",
+                // "data" => [
+                //     // "request" => $request->all(),
+                //     "coupon" => $coupon,
+                // ]
             ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
 
         } catch (\Exception $e) {

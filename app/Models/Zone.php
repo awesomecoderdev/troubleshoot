@@ -13,6 +13,15 @@ class Zone extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        "*"
+    ];
+
+    /**
      * Display the specified resource.
      *
      * @return  \App\Models\Campaign
