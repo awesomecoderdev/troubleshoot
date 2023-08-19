@@ -162,12 +162,12 @@ class ProviderBookingController extends Controller
                 ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
             }
 
-            // $booking->handyman_id = $handyman->id;
-            // $booking->status = "progressing";
-            // $booking->save();
+            $booking->handyman_id = $handyman->id;
+            $booking->status = "progressing";
+            $booking->save();
 
-            // $handyman->status = "unavailable";
-            // $handyman->save();
+            $handyman->status = "unavailable";
+            $handyman->save();
 
             return Response::json([
                 'success'   => true,
