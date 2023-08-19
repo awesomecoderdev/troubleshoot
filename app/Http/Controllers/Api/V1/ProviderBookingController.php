@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Handyman;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -123,15 +124,50 @@ class ProviderBookingController extends Controller
         try {
             // Get the user's id from token header and get his provider bookings
             $provider = $request->user("providers");
-            $booking = Booking::where("id", $request->booking_id)->where("status", "accepted")->where("handyman_id", 0)->where("provider_id", $provider->id)->firstOrFail();
-            $handyman = Handyman::where("id", $request->handyman_id)->where("status", "available")->where("provider_id", $provider->id)->firstOrFail();
+            // $booking = Booking::where("id", $request->booking_id)->where("status", "accepted")->where("handyman_id", 0)->where("provider_id", $provider->id)->firstOrFail();
+            $booking = Booking::where("id", $request->booking_id)->where("provider_id", $provider->id)->firstOrFail();
+            $handyman = Handyman::where("id", $request->handyman_id)->where("provider_id", $provider->id)->first();
 
-            $booking->handyman_id = $handyman->id;
-            $booking->status = "progressing";
-            $booking->save();
 
-            $handyman->status = "unavailable";
-            $handyman->save();
+            if (!$handyman) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_NOT_FOUND,
+                    'message'   => "Handyman Not Found.",
+                ],  HTTP::HTTP_NOT_FOUND); // HTTP::HTTP_OK
+            }
+
+            if ($handyman->status == "unavailable") {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "Handyman Unavailable.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+
+
+            if ($booking->status != "accepted") {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "Booking status must be accepted.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+
+            if ($booking->handyman_id != 0) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "This booking is already handover to $handyman->name.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+
+            // $booking->handyman_id = $handyman->id;
+            // $booking->status = "progressing";
+            // $booking->save();
+
+            // $handyman->status = "unavailable";
+            // $handyman->save();
 
             return Response::json([
                 'success'   => true,

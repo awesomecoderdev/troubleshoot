@@ -64,6 +64,18 @@ class Handyman  extends Authenticatable
         );
     }
 
+    /**
+     * Interact with the user's image.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => ucwords($value),
+            set: fn ($value) => ucwords($value),
+        );
+    }
 
     /**
      * Create a new personal access token for the user.
