@@ -118,73 +118,26 @@ class ProviderCouponController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateServiceRequest $request, Service $service)
-    {
-        $provider = $request->user("providers");
-        try {
-            if ($service->provider_id != $provider->id) {
-                return Response::json([
-                    'success'   => false,
-                    'status'    => HTTP::HTTP_FORBIDDEN,
-                    'message'   => "You are not belong to this service.",
-                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
-            }
-
-            $service->update([
-                "name" => $request->name,
-                "price" => $request->price,
-                "type" => $request->type,
-                "duration" => $request->duration,
-                "discount" => $request->discount,
-                "short_description" => $request->short_description,
-                "long_description" => $request->long_description,
-                "tax" => $request->tax,
-                "category_id" => $request->category_id,
-                "zone_id" => $provider->zone_id,
-            ]);
-
-            return Response::json([
-                'success'   => true,
-                'status'    => HTTP::HTTP_OK,
-                'message'   => "Service successfully updated.",
-                'data'      => [
-                    "service"   => $service,
-                ]
-            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
-        } catch (\Exception $e) {
-            //throw $e;
-            return Response::json([
-                'success'   => false,
-                'status'    => HTTP::HTTP_FORBIDDEN,
-                'message'   => "Something went wrong. Try after sometimes.",
-                'err' => $e->getMessage(),
-            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
-        }
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Service $service, Request $request)
+    public function destroy(Coupon $coupon, Request $request)
     {
         $provider = $request->user("providers");
         try {
-            if ($service->provider_id != $provider->id) {
+            if ($coupon->provider_id != $provider->id) {
                 return Response::json([
                     'success'   => false,
                     'status'    => HTTP::HTTP_FORBIDDEN,
-                    'message'   => "You are not allowed to delete this service.",
+                    'message'   => "You are not allowed to delete this coupon.",
                 ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
             }
 
-            $service->delete();
+            $coupon->delete();
 
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
-                'message'   => "Service successfully deleted.",
+                'message'   => "Coupon successfully deleted.",
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;

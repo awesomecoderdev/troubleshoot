@@ -128,7 +128,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::get('/booking/details/{booking}', [ProviderBookingController::class, "details"])->name("booking.details");
 
             // provider coupons crud route
-            Route::resource('coupon', ProviderCouponController::class)->except(['create', 'edit']);
+            Route::resource('coupon', ProviderCouponController::class)->except(['create', 'edit', "update"]);
         });
     });
 });
