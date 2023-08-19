@@ -110,7 +110,7 @@ class CustomerBookingController extends Controller
         try {
             $errors = [];
             $calculation = [];
-            $today = Carbon::today();
+            $today = Carbon::now();
             $customer = $request->user("customers");
             $customer->load("address");
             $service = Service::where("id", $request->service_id)->where("status", true)->firstOrFail();
@@ -119,14 +119,14 @@ class CustomerBookingController extends Controller
             $service = Service::where("id", $request->service_id)->firstOrFail();
 
             if ($request->filled("schedule")) {
-                if ($request->schedule <= $today) {
+                if ($request->schedule < date("Y-m-d", strtotime($today))) {
                     return Response::json([
                         'success'   => false,
                         'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
                         'message'   => "Validation failed.",
                         'errors' => [
                             "schedule" => [
-                                "Please select a valid schedule."
+                                "Please select a valid schedule.",
                             ]
                         ]
                     ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
