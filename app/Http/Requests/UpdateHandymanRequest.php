@@ -34,7 +34,7 @@ class UpdateHandymanRequest extends FormRequest
             'handyman_id' => 'required|integer|exists:handymen,id',
             'name' => 'required|string|min:3|max:255',
             'password' => 'string|min:6|max:10',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'address' => 'required|string',
         ];
     }
