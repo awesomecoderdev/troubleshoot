@@ -118,6 +118,21 @@ class CustomerBookingController extends Controller
             $campaign = Campaign::where("id", $request->input("campaign_id", 0))->first();
             $service = Service::where("id", $request->service_id)->firstOrFail();
 
+            if ($request->filled("schedule")) {
+                if ($request->schedule <= $today) {
+                    return Response::json([
+                        'success'   => false,
+                        'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                        'message'   => "Validation failed.",
+                        'errors' => [
+                            "schedule" => [
+                                "Please select a valid schedule."
+                            ]
+                        ]
+                    ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+                }
+            }
+
             // data
             $price = intval($service->price);
             $discount = $service->discount;
@@ -226,7 +241,7 @@ class CustomerBookingController extends Controller
             $booking->additional_charge = $additional_charge;
             $booking->is_rated = false; // that mean booking is not given rating
             $booking->schedule = Carbon::parse($request->schedule)->startOfDay();
-            $booking->save();
+            // $booking->save();
 
             return Response::json(
                 [
