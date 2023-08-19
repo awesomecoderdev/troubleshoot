@@ -98,7 +98,18 @@ class Service extends Model
         return $this->hasMany(Review::class);
     }
 
-
+    /**
+     * Interact with the price.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function price(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => abs($value),
+            // set: fn ($value) => strtolower($value),
+        );
+    }
 
     /**
      * Interact with the image.
