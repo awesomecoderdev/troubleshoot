@@ -35,7 +35,7 @@ class CustomerBookingController extends Controller
                 "campaign",
                 "coupon",
                 "customer",
-            ])->where("customer_id", $customer->id)->get();
+            ])->where("customer_id", $customer->id)->orderBy("id", "DESC")->get();
 
             return Response::json([
                 'success'   => true,
