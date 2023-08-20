@@ -30,7 +30,8 @@ class StoreServiceRequest extends FormRequest
         return [
             "name" => "required",
             // "parent_id" => "required",
-            "category_id" => "required|integer",
+            "category_id" => "required|exists:categories,id",
+            "subcategory_id" => "required|exists:categories,id",
             // "provider_id" => "required",
             "zone_id" => "required|integer",
             "price" => "required|integer",

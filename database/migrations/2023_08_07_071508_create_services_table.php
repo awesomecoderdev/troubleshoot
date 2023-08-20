@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create("services", function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->integer("parent_id")->default(0);
+            $table->integer("subcategory_id")->default(0);
             $table->integer("category_id");
             $table->integer("provider_id");
             $table->integer("zone_id");

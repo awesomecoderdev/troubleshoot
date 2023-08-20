@@ -63,6 +63,7 @@ class ProviderServiceController extends Controller
                 "long_description" => $request->long_description,
                 "tax" => $request->tax,
                 "category_id" => $request->category_id,
+                "subcategory_id" => $request->subcategory_id,
                 "provider_id" => $provider->id,
                 "zone_id" => $provider->zone_id,
             ]);

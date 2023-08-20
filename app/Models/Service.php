@@ -95,7 +95,7 @@ class Service extends Model
      */
     public function subcategory()
     {
-        return $this->belongsTo(Category::class, "parent_id", "id");
+        return $this->belongsTo(Category::class);
     }
 
     /**
