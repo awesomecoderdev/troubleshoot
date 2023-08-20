@@ -62,7 +62,8 @@ class HandymanBookingController extends Controller
         try {
             // Get the user's id from token header and get his provider bookings
             $handyman = $request->user("handymans");
-            $booking = Booking::where("id", $request->input("booking", 0))->where('handyman_id', $handyman->id)->firstOrFail();
+            // $booking = Booking::where("id", $request->input("booking", 0))->where('handyman_id', $handyman->id)->firstOrFail();
+            $booking = Booking::where("id", $request->booking)->where('handyman_id', $handyman->id)->firstOrFail();
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
