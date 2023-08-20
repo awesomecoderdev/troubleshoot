@@ -39,7 +39,6 @@ class Booking extends Model
         "status",
         "is_paid",
         "payment_method",
-        "title",
         "hint",
         "metadata",
         "total_amount",

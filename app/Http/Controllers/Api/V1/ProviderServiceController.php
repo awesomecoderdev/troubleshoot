@@ -22,7 +22,7 @@ class ProviderServiceController extends Controller
     public function index(Request $request)
     {
         $provider = $request->user("providers");
-        $services = Service::with(["category", "reviews"])->where("provider_id", $provider->id)->get();
+        $services = Service::with(["category", "subcategory", "reviews"])->where("provider_id", $provider->id)->get();
 
         try {
             return Response::json([

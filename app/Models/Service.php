@@ -93,6 +93,16 @@ class Service extends Model
      *
      * @return  \App\Models\Category
      */
+    public function subcategory()
+    {
+        return $this->belongsTo(Category::class, "parent_id", "parent_id");
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Category
+     */
     public function reviews()
     {
         return $this->hasMany(Review::class);

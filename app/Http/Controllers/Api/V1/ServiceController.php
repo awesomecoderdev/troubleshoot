@@ -145,7 +145,7 @@ class ServiceController extends Controller
             }
         } else {
             try {
-                $service = Service::with(["provider", "reviews"])->findOrFail($request->service);
+                $service = Service::with(["provider", "reviews", "database"])->findOrFail($request->service);
                 return Response::json([
                     'success'   => true,
                     'status'    => HTTP::HTTP_OK,
