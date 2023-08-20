@@ -247,7 +247,7 @@ class CustomerController extends Controller
             }
             // $request->user('customers')->tokens()->delete();
 
-            $customer->tokens()->delete();
+            // $customer->tokens()->delete(); // uncomment for live server
             $token = $customer->createToken('authToken')->plainTextToken;
 
             return Response::json([
