@@ -28,12 +28,13 @@ class UpdateAddressRequest extends FormRequest
     public function rules()
     {
         return [
-            'street_one' => 'required|string|max:255',
-            'street_two' => 'string|max:255',
+            'street' => 'required|string|max:255',
+            'apartment_name' => 'required|string|max:255',
+            'apartment_number' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'zip' => 'required|string|min:3|max:10',
-            'lat' => 'string',
-            'lng' => 'string',
+            'lat' => 'required|string',
+            'lng' => 'required|string',
         ];
     }
 
