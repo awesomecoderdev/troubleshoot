@@ -101,7 +101,8 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::get('/booking', [HandymanBookingController::class, "booking"])->name("booking");
             Route::post('/booking/request', [HandymanBookingController::class, "request"])->name("booking.request");
             Route::get('/booking/schedule', [HandymanBookingController::class, "schedule"])->name("schedule");
-            // Route::post('/booking/schedule', [HandymanBookingController::class, "schedule"])->name("schedule");
+            Route::post('/booking/schedule/start', [HandymanBookingController::class, "start"])->name("schedule.start");
+            Route::post('/booking/schedule/stop', [HandymanBookingController::class, "stop"])->name("schedule.stop");
         });
     });
 

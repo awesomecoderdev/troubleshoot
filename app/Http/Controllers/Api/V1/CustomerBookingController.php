@@ -9,6 +9,7 @@ use App\Models\Service;
 use App\Models\Campaign;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Response;
@@ -208,6 +209,8 @@ class CustomerBookingController extends Controller
             $total_tax = intval($service->tax);
             $total_discount = intval($service->discount);
             $additional_charge = intval(0);
+            // start Transaction
+            DB::beginTransaction();
 
             // new booking
             $booking = new Booking();
@@ -242,6 +245,10 @@ class CustomerBookingController extends Controller
             $booking->is_rated = false; // that mean booking is not given rating
             $booking->schedule = Carbon::parse($request->schedule)->startOfDay();
             $booking->save();
+
+            // end transaction
+            DB::commit();
+
 
             return Response::json(
                 [

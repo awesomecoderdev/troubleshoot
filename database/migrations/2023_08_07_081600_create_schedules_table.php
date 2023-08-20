@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer("booking_id");
             $table->timestamp("date");
             $table->timestamp("start");
-            $table->timestamp("end");
+            $table->timestamp("end")->nullable();
             $table->timestamps();
         });
     }
