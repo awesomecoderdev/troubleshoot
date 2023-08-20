@@ -92,4 +92,59 @@ class HandymanBookingController extends Controller
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }
+
+
+    /**
+     * Retrieve update info.
+     */
+    public function request(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'booking_id' => 'required|integer|exists:bookings,id',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'errors' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        try {
+            // Get the user's id from token header and get his provider bookings
+            $handyman = $request->user("handymans");
+            $handyman->load("provider");
+            $booking = Booking::where("id", $request->booking_id)->where("provider_id", $handyman?->provider?->id)->firstOrFail();
+
+            if ($booking->status != "progressing") {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "Your requested booking is $booking->status.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+
+            $booking->status = "progressed";
+            $booking->save();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully sent a request to customer.",
+                // "data"      => [
+                //     "booking" => $booking
+                // ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            throw $e;
+            // return Response::json([
+            //     'success'   => false,
+            //     'status'    => HTTP::HTTP_FORBIDDEN,
+            //     'message'   => "Something went wrong. Try after sometimes.",
+            //     'err' => $e->getMessage(),
+            // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
 }

@@ -64,12 +64,12 @@ class AddressController extends Controller
 
             return Response::json([
                 'success'   => true,
-                'status'    => HTTP::HTTP_ACCEPTED,
+                'status'    => HTTP::HTTP_OK,
                 'message'   => "Address successfully updated.",
                 // 'data'      => [
                 //     "address" => new AddressResource($address),
                 // ]
-            ],  HTTP::HTTP_ACCEPTED); // HTTP::HTTP_OK
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
             return Response::json([
