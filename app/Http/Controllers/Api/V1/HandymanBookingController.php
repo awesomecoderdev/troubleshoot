@@ -60,7 +60,9 @@ class HandymanBookingController extends Controller
         try {
             // Get the user's id from token header and get his provider bookings
             // status
-            $handyman = $request->user("handyman");
+            $params = Arr::only($request->input(), ["query", "zone_id", "per_page"]);
+            $handyman = $request->user("handymans");
+            $handyman->load("provider");
             $bookings = Booking::with([
                 "provider",
                 "category",
@@ -70,14 +72,14 @@ class HandymanBookingController extends Controller
                 "campaign",
                 "coupon",
                 "customer",
-            ])->where("handyman_id", $handyman->id)->get();
+            ])->where("handyman_id", $handyman->id)->where("provider_id", $handyman?->provider?->id)->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully authorized.",
                 'data'   => [
-                    "bookings" => $bookings
+                    "bookings" => $bookings,
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
@@ -86,7 +88,7 @@ class HandymanBookingController extends Controller
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,
                 'message'   => "Something went wrong. Try after sometimes.",
-                // 'err' => $e->getMessage(),
+                'err' => $e->getMessage(),
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }

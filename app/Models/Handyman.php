@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use DateTimeInterface;
+use App\Models\Provider;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
@@ -76,6 +77,17 @@ class Handyman  extends Authenticatable
             set: fn ($value) => ucwords($value),
         );
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Provider
+     */
+    public function provider()
+    {
+        return $this->belongsTo(Provider::class);
+    }
+
 
     /**
      * Create a new personal access token for the user.

@@ -74,7 +74,7 @@ class ServiceController extends Controller
         if (in_array($request->service, ["search", "popular", "recommended"])) {
             $zone = $request->zone_id;
             $query = $request->query;
-            $params = Arr::only($request->input(), ["query", "zone_id"]);
+            $params = Arr::only($request->input(), ["query", "zone_id", "per_page"]);
 
             if ($request->service == "popular" || $request->service == "recommended") {
                 $validator = Validator::make($request->all(), [
@@ -115,7 +115,7 @@ class ServiceController extends Controller
                             $q->where('name', 'like', "%{$query}%")
                                 ->orWhere('short_description', 'like', "%{$query}%")
                                 ->orWhere('long_description', 'like', "%{$query}%");
-                        })->paginate(10)->onEachSide(-1)->appends($params);
+                        })->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
                     return Response::json([
                         'success'   => true,
                         'status'    => HTTP::HTTP_OK,
