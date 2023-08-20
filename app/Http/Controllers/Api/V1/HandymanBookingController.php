@@ -240,9 +240,8 @@ class HandymanBookingController extends Controller
                 ->where("handyman_id", $handyman->id)
                 ->where("provider_id", $handyman?->provider?->id)
                 ->firstOrFail();
-            $schedule = Schedule::where("booking_id", $booking->id)->where("handyman_id", $handyman->id)->orderBy("id", "DESC")->first();
-
-            if ($schedule && $schedule->end == null) {
+            $schedules = Schedule::where("end", null)->where("handyman_id", $handyman->id)->orderBy("id", "DESC")->get();
+            if ($schedules->count() > 0) {
                 return Response::json([
                     'success'   => false,
                     'status'    => HTTP::HTTP_FORBIDDEN,
