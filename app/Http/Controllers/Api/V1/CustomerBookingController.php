@@ -362,6 +362,7 @@ class CustomerBookingController extends Controller
                         "data"      => [
                             "price" => $price,
                             "discount" => $discount,
+                            "total_discount" => $discount,
                             "with_discount" => $discountPrice,
                             "tax" => $service->tax,
                             "total_tax" => $tax,
@@ -381,6 +382,7 @@ class CustomerBookingController extends Controller
                 } else {
                     // with coupon
                     $totalAmount = $withTax - $coupon->discount;
+                    $totalDiscount = $discount + $coupon->discount;
                     return Response::json([
                         'success'   => true,
                         'status'    => HTTP::HTTP_OK,
@@ -388,6 +390,7 @@ class CustomerBookingController extends Controller
                         "data"      => [
                             "price" => $price,
                             "discount" => $discount,
+                            "total_discount" => $totalDiscount,
                             "with_discount" => $discountPrice,
                             "tax" => $service->tax,
                             "total_tax" => $tax,
@@ -409,6 +412,7 @@ class CustomerBookingController extends Controller
                     "data"      => [
                         "price" => $price,
                         "discount" => $discount,
+                        "total_discount" => $discount,
                         "with_discount" => $discountPrice,
                         "tax" => $service->tax,
                         "total_tax" => $tax,
