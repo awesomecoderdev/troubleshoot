@@ -55,6 +55,34 @@ class HandymanBookingController extends Controller
     }
 
     /**
+     * Retrieve update info.
+     */
+    public function details(Request $request)
+    {
+        try {
+            // Get the user's id from token header and get his provider bookings
+            $handyman = $request->user("handymans");
+            $booking = Booking::where("id", $request->input("booking", 0))->where('handyman_id', $handyman->id)->firstOrFail();
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully authorized.",
+                'data'      => [
+                    'bookings'  => $booking,
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            throw $e;
+            // return Response::json([
+            //     'success'   => false,
+            //     'status'    => HTTP::HTTP_FORBIDDEN,
+            //     'message'   => "Something went wrong. Try after sometimes.",
+            //     'err' => $e->getMessage(),
+            // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+    /**
      * Retrieve booking info.
      */
     public function booking(Request $request)
