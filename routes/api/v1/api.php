@@ -98,6 +98,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::get('/', 'handyman')->name("handyman");
             Route::post('/logout', 'logout')->name("logout");
             Route::get('/service', [HandymanBookingController::class, 'service'])->name("service");
+            Route::get('/booking', [HandymanBookingController::class, "booking"])->name("booking");
         });
     });
 
