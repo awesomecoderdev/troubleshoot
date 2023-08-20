@@ -20,6 +20,8 @@ class AddressFactory extends Factory
             "customer_id" => fake()->numberBetween(1, 55),
             "street_one" => fake()->streetAddress(),
             "street_two" =>  fake()->streetAddress(),
+            "apartment_name" =>  fake()->streetAddress(),
+            "apartment_number" =>  fake()->numberBetween(1111, 9999),
             "city" => fake()->city(),
             "zip" => fake()->numberBetween(1111, 9999),
             "lat" => "23.747" . fake()->numberBetween(100, 600),

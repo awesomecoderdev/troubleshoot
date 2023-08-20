@@ -25,6 +25,6 @@ class DatabaseSeeder extends Seeder
         // \App\Models\Address::factory(50)->create();
         // \App\Models\Category::factory(50)->create();
         // \App\Models\Zone::factory(50)->create();
-        \App\Models\Booking::factory(50)->create();
+        // \App\Models\Booking::factory(50)->create();
     }
 }
