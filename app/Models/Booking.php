@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Handyman;
 use App\Models\Provider;
+use App\Models\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -97,6 +98,16 @@ class Booking extends Model
     public function service()
     {
         return $this->belongsTo(Service::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Schedule
+     */
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
     }
 
     /**

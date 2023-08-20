@@ -75,6 +75,7 @@ class HandymanBookingController extends Controller
                 "campaign",
                 "coupon",
                 "customer",
+                "schedules"
             ])->where("handyman_id", $handyman->id)->where("provider_id", $handyman?->provider?->id)->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 
             return Response::json([
