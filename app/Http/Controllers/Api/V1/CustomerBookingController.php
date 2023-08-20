@@ -320,7 +320,6 @@ class CustomerBookingController extends Controller
 
         $validator = Validator::make($request->all(), [
             'service_id' => 'required|integer|exists:services,id',
-            'coupon' => 'string',
         ]);
 
         if ($validator->fails()) {
@@ -338,7 +337,7 @@ class CustomerBookingController extends Controller
             $customer = $request->user("customers");
             $today = Carbon::today();
             $service = Service::where("id", $request->service_id)->firstOrFail();
-            $coupon = Coupon::where("provider_id", $service->provider_id)->where("code", $request->coupon)->where("end", '>=', $today)->first();
+            $coupon = Coupon::where("provider_id", $service->provider_id)->where("code", $request->input("coupon", 0))->where("end", '>=', $today)->first();
 
             // data
             $price = intval($service->price);
