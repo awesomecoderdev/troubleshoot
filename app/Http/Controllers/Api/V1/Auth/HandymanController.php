@@ -114,7 +114,7 @@ class HandymanController extends Controller
                 ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
             }
 
-            $handyman->tokens()->delete();
+            // $handyman->tokens()->delete();
             $token = $handyman->createToken('authToken')->plainTextToken;
 
             return Response::json([
