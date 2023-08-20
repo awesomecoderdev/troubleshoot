@@ -215,7 +215,7 @@ class CustomerBookingController extends Controller
             // new booking
             $booking = new Booking();
             $booking->customer_id = $customer->id;
-            $booking->address_id = $customer->address->id;
+            $booking->address_id = $customer->address->id ?? 0;
             $booking->service_id = $service->id;
             $booking->provider_id = $service->provider_id;
             $booking->title = $request->title;
