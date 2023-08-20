@@ -151,6 +151,7 @@ class CustomerBookingController extends Controller
                     $calculation = [
                         "price" => $price,
                         "discount" => $discount,
+                        "total_discount" => $discount,
                         "with_discount" => $discountPrice,
                         "tax" => $service->tax,
                         "total_tax" => $tax,
@@ -169,9 +170,11 @@ class CustomerBookingController extends Controller
                 } else {
                     // with coupon
                     $totalAmount = $withTax - $coupon->discount;
+                    $totalDiscount = $discount + $coupon->discount;
                     $calculation = [
                         "price" => $price,
                         "discount" => $discount,
+                        "total_discount" => $totalDiscount,
                         "with_discount" => $discountPrice,
                         "tax" => $service->tax,
                         "total_tax" => $tax,
@@ -187,6 +190,7 @@ class CustomerBookingController extends Controller
                 $calculation = [
                     "price" => $price,
                     "discount" => $discount,
+                    "total_discount" => $discount,
                     "with_discount" => $discountPrice,
                     "tax" => $service->tax,
                     "total_tax" => $tax,
