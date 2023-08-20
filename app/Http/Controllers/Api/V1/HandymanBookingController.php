@@ -78,12 +78,14 @@ class HandymanBookingController extends Controller
                 "schedules"
             ])->where("handyman_id", $handyman->id)->where("provider_id", $handyman?->provider?->id)->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 
+            $completed = Booking::select("id")->where("status", "completed")->where("handyman_id", $handyman->id)->where("provider_id", $handyman?->provider?->id)->get();
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully authorized.",
                 'data'   => [
                     "bookings" => $bookings,
+                    "completed" => $completed
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
