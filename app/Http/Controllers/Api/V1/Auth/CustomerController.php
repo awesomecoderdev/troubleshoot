@@ -276,6 +276,9 @@ class CustomerController extends Controller
         $address->lat = $request->lat;
         $address->lng = $request->lng;
         $address->street_one = "";
+        $address->street_two = "";
+        $address->apartment_name = "";
+        $address->apartment_number = "";
         $address->city = "";
         $address->zip = "";
 
@@ -372,7 +375,7 @@ class CustomerController extends Controller
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,
                 'message'   => "Something went wrong. Try after sometimes.",
-                // 'err' => $e->getMessage(),
+                'err' => $e->getMessage(),
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }

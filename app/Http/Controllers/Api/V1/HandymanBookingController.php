@@ -20,6 +20,7 @@ use App\Http\Requests\UpdateHandymanRequest;
 use App\Http\Resources\Api\V1\HandymanResource;
 use App\Http\Requests\Api\V1\HandymanLoginRequest;
 use App\Models\Booking;
+use App\Models\Schedule;
 
 class HandymanBookingController extends Controller
 {
@@ -136,6 +137,53 @@ class HandymanBookingController extends Controller
                 // "data"      => [
                 //     "booking" => $booking
                 // ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            throw $e;
+            // return Response::json([
+            //     'success'   => false,
+            //     'status'    => HTTP::HTTP_FORBIDDEN,
+            //     'message'   => "Something went wrong. Try after sometimes.",
+            //     'err' => $e->getMessage(),
+            // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+
+
+    /**
+     * Retrieve update info.
+     */
+    public function schedule(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'booking_id' => 'required|integer|exists:bookings,id',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'errors' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        try {
+            // Get the user's id from token header and get his provider bookings
+            $handyman = $request->user("handymans");
+            $handyman->load("provider");
+
+            $schedules = Schedule::all();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully sent a request to customer.",
+                "data"      => [
+                    "schedules" => $schedules,
+                    "handyman" => $handyman,
+                ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             throw $e;
