@@ -320,7 +320,7 @@ class CustomerBookingController extends Controller
 
         $validator = Validator::make($request->all(), [
             'service_id' => 'required|integer|exists:services,id',
-            'coupon' => 'string|exists:coupons,code',
+            'coupon' => 'string',
         ]);
 
         if ($validator->fails()) {
