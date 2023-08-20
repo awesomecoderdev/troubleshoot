@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer("service_id")->default(0);
             $table->integer("category_id")->default(0);
             $table->integer("zone_id")->default(0);
-            $table->enum("status", ["pending", "accepted", "rejected", "progressing", "cancelled", "completed"])->default("pending");
+            $table->enum("status", ["pending", "accepted", "rejected", "progressing", "progressed", "cancelled", "completed"])->default("pending");
             $table->boolean("is_paid")->default(false);
             $table->enum("payment_method", ["cod", "online"])->default("cod");
             $table->string("title")->nullable();

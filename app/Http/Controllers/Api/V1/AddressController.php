@@ -52,8 +52,10 @@ class AddressController extends Controller
             $customer = $request->user('customers');
             $address = $customer->address;
 
-            $address->street_one = "$request->apartment_name, $request->apartment_number";
-            $address->street_two = $request->street;
+            $address->street_one = $request->street_one;
+            $address->apartment_name = $request->apartment_name;
+            $address->apartment_number = $request->apartment_number;
+            $address->street_two = $request->input("street_two", "");
             $address->city = $request->city;
             $address->zip = $request->zip;
             $address->lat = $request->lat;

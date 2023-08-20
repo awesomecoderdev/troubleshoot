@@ -16,6 +16,8 @@ return new class extends Migration
             $table->integer("customer_id");
             $table->string("street_one");
             $table->string("street_two")->nullable();
+            $table->string("apartment_name");
+            $table->string("apartment_number");
             $table->string("city");
             $table->string("zip");
             $table->string("lat")->nullable();
