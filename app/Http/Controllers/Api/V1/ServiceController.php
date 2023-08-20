@@ -45,7 +45,7 @@ class ServiceController extends Controller
 
         try {
             $params = Arr::only($request->input(), ["category_id", "zone_id"]);
-            $services = Service::where('category_id', $category)->where('zone_id', $zone)->paginate($request->per_page ?? 100)->onEachSide(-1)->appends($params);
+            $services = Service::where('category_id', $category)->where('zone_id', $zone)->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
@@ -145,7 +145,7 @@ class ServiceController extends Controller
             }
         } else {
             try {
-                $service = Service::with(["provider", "reviews", "database"])->findOrFail($request->service);
+                $service = Service::with(["provider", "reviews"])->findOrFail($request->service);
                 return Response::json([
                     'success'   => true,
                     'status'    => HTTP::HTTP_OK,
