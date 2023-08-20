@@ -91,6 +91,7 @@ class ProviderServiceController extends Controller
     public function show(Service $service, Request $request)
     {
         $provider = $request->user("providers");
+        $service->load(["category", "subcategory", "reviews"]);
         try {
             if ($service->provider_id != $provider->id) {
                 return Response::json([
