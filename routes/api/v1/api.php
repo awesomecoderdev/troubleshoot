@@ -36,7 +36,8 @@ Route::any('/', function (Request $request) {
     return response()->json([
         "success" => true,
         "status" => 200,
-        "message" => "Troubleshoot API Version V0.1"
+        "message" => "Troubleshoot API Version V0.1",
+        "data" => intval(14.519999999999999573674358543939888477325439453125)
     ]);
 });
 
