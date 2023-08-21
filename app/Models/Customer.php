@@ -92,7 +92,7 @@ class Customer extends Authenticatable
     protected function image(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value != null && file_exists(public_path($value)) ? asset($value) : null,
+            get: fn ($value) => $value != null && file_exists(public_path($value)) ? asset($value) :  asset("assets/images/customer/default.png"),
             // set: fn ($value) => strtolower($value),
         );
     }
