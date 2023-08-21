@@ -138,7 +138,7 @@ class CustomerBookingController extends Controller
             // data
             $price = intval($service->price);
             $discount = $service->discount;
-            $tax = $price * ($service->tax / 100);;
+            $tax = abs($price * ($service->tax / 100));
             // discount price
             $discountPrice = $price - $discount;
             // with tax
@@ -346,7 +346,7 @@ class CustomerBookingController extends Controller
             // data
             $price = intval($service->price);
             $discount = $service->discount;
-            $tax = $price * ($service->tax / 100);;
+            $tax = abs($price * ($service->tax / 100));
 
             // discount price
             $discountPrice = $price - $discount;
