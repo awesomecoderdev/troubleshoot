@@ -32,12 +32,9 @@ class HandymanBookingController extends Controller
     public function service(Request $request)
     {
         $handyman = $request->user("handymans");
-        $params = Arr::only($request->input(), ["query", "zone_id", "per_page"]);
 
         try {
-            $bookings = Booking::where('handyman_id', $handyman->id)->when($request->status != null && in_array($request->status, ["pending", "accepted", "rejected", "progressing", "progressed", "cancelled", "completed"]), function ($query) use ($request) {
-                return $query->where("status", strtolower($request->status));
-            })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
+            $bookings = Booking::where('handyman_id', $handyman->id)->paginate($request->input("per_page", 10))->onEachSide(-1);
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
@@ -109,10 +106,10 @@ class HandymanBookingController extends Controller
             $params = Arr::only($request->input(), ["query", "zone_id", "per_page"]);
             $handyman = $request->user("handymans");
             $handyman->load("provider");
-
             $bookings = Booking::with([
                 "provider",
                 "category",
+                // "subcategory",
                 "handyman",
                 "service",
                 "zone",
@@ -120,8 +117,9 @@ class HandymanBookingController extends Controller
                 "coupon",
                 "customer",
                 "schedules"
-            ])->where("handyman_id", $handyman->id)->where("provider_id", $handyman?->provider?->id)->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide();
-            // ])->where("handyman_id", $handyman->id)->where("provider_id", $handyman?->provider?->id)->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
+            ])->where("handyman_id", $handyman->id)->where("provider_id", $handyman?->provider?->id)->when($request->status != null && in_array($request->status, ["pending", "accepted", "rejected", "progressing", "progressed", "cancelled", "completed"]), function ($query) use ($request) {
+                return $query->where("status", strtolower($request->status));
+            })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 
             $completed = Booking::select("id")->where("status", "completed")->where("handyman_id", $handyman->id)->where("provider_id", $handyman?->provider?->id)->get();
             return Response::json([
