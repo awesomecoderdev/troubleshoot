@@ -26,6 +26,7 @@ class CustomerBookingController extends Controller
         try {
             // Get the user's id from token header and get his provider bookings
             // status
+            $params = Arr::only($request->input(), ["query", "zone_id", "per_page"]);
             $customer = $request->user("customers");
             $bookings = Booking::with([
                 "provider",
@@ -37,7 +38,7 @@ class CustomerBookingController extends Controller
                 "coupon",
                 "customer",
                 "schedules"
-            ])->where("customer_id", $customer->id)->orderBy("id", "DESC")->get();
+            ])->where("customer_id", $customer->id)->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 
             return Response::json([
                 'success'   => true,
