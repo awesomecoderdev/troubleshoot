@@ -117,9 +117,11 @@ class HandymanBookingController extends Controller
                 "coupon",
                 "customer",
                 "schedules"
-            ])->where("handyman_id", $handyman->id)->where("provider_id", $handyman?->provider?->id)->when($request->status != null && in_array($request->status, ["pending", "accepted", "rejected", "progressing", "progressed", "cancelled", "completed"]), function ($query) use ($request) {
-                return $query->where("status", strtolower($request->status));
-            })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
+            ])->where("handyman_id", $handyman->id)
+                ->where("provider_id", $handyman?->provider?->id)
+                ->when($request->status != null && in_array($request->status, ["pending", "accepted", "rejected", "progressing", "progressed", "cancelled", "completed"]), function ($query) use ($request) {
+                    return $query->where("status", strtolower($request->status));
+                })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 
             $completed = Booking::select("id")->where("status", "completed")->where("handyman_id", $handyman->id)->where("provider_id", $handyman?->provider?->id)->get();
             return Response::json([
