@@ -38,7 +38,9 @@ class CustomerBookingController extends Controller
                 "coupon",
                 "customer",
                 "schedules"
-            ])->where("customer_id", $customer->id)->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
+            ])->where("customer_id", $customer->id)->when($request->status != null && in_array($request->status, ["pending", "accepted", "rejected", "progressing", "progressed", "cancelled", "completed"]), function ($query) use ($request) {
+                return $query->where("status", strtolower($request->status));
+            })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 
             return Response::json([
                 'success'   => true,
