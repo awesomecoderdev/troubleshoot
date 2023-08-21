@@ -152,10 +152,11 @@ class CustomerBookingController extends Controller
                 // coupon minimum amount
                 if ($withTax < $coupon->min_amount) {
                     $totalAmount = $withTax;
+                    $totalDiscount = $discount;
                     $calculation = [
                         "price" => $price,
                         "discount" => $discount,
-                        "total_discount" => $discount,
+                        "total_discount" => $totalDiscount,
                         "with_discount" => $discountPrice,
                         "tax" => $service->tax,
                         "total_tax" => $tax,
@@ -190,11 +191,12 @@ class CustomerBookingController extends Controller
                 }
             } else { // without coupon
                 $totalAmount = $withTax;
+                $totalDiscount = $discount;
 
                 $calculation = [
                     "price" => $price,
                     "discount" => $discount,
-                    "total_discount" => $discount,
+                    "total_discount" => $totalDiscount,
                     "with_discount" => $discountPrice,
                     "tax" => $service->tax,
                     "total_tax" => $tax,
@@ -214,9 +216,9 @@ class CustomerBookingController extends Controller
 
 
             // need to calculate total tax etc
-            $total_amount = intval($service->price);
-            $total_tax = intval($service->tax);
-            $total_discount = intval($service->discount);
+            $total_amount = intval($totalAmount);
+            $total_tax = intval($tax);
+            $total_discount = intval($totalDiscount);
             $additional_charge = intval(0);
             // start Transaction
             DB::beginTransaction();
