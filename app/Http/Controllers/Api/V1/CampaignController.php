@@ -42,7 +42,7 @@ class CampaignController extends Controller
         }
 
         try {
-            $today = Carbon::now();
+            $today = Carbon::now()->endOfDay();
             // $campaigns = Campaign::where('end', '>=', $today)->paginate(10)->onEachSide(-1);
             $campaigns = Campaign::when($request->category_id != null, function ($query) use ($request) {
                 return $query->where("category_id", $request->category_id);

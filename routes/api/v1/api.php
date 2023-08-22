@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\V1\Auth\HandymanController;
 use App\Http\Controllers\Api\V1\Auth\ProviderController;
 use App\Http\Controllers\Api\V1\ProviderCouponController;
 use App\Http\Controllers\Api\V1\CustomerBookingController;
+use App\Http\Controllers\Api\V1\CustomerCouponController;
 use App\Http\Controllers\Api\V1\HandymanBookingController;
 use App\Http\Controllers\Api\V1\ProviderBookingController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
@@ -80,6 +81,11 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/booking/update', [CustomerBookingController::class, "change"])->name("booking.change");
             Route::get('/booking/details/{booking}', [CustomerBookingController::class, "details"])->name("booking.details");
             Route::get('/booking/calculate', [CustomerBookingController::class, "calculate"])->name("booking.calculate");
+
+
+
+            // customer coupons
+            Route::get('/coupons', [CustomerCouponController::class, "coupons"])->name("coupons");
         });
     });
 
