@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
                 'success'   => false,
                 'status'    => self::HTTP_CSRF_MISMATCH,
                 'message'   =>  "CSRF Token Mismatch.",
-            ], self::HTTP_CSRF_MISMATCH)->header("X-CSRF-TOKEN", csrf_token())->cookie(cookie("X-CSRF-TOKEN", csrf_token(), 60));
+            ], self::HTTP_CSRF_MISMATCH);
         }
 
         //  default exception

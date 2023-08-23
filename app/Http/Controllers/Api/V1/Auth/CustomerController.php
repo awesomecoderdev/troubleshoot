@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -249,6 +250,7 @@ class CustomerController extends Controller
 
             // $customer->tokens()->delete(); // uncomment for live server
             $token = $customer->createToken('authToken')->plainTextToken;
+            Session::put("customer", $token); // for next.js frontend
 
             return Response::json([
                 'success'   => true,
