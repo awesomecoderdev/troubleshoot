@@ -82,8 +82,6 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::get('/booking/details/{booking}', [CustomerBookingController::class, "details"])->name("booking.details");
             Route::get('/booking/calculate', [CustomerBookingController::class, "calculate"])->name("booking.calculate");
 
-
-
             // customer coupons
             Route::get('/coupons', [CustomerCouponController::class, "coupons"])->name("coupons");
         });
