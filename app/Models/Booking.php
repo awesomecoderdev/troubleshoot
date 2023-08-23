@@ -59,6 +59,15 @@ class Booking extends Model
     ];
 
     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'customer.remember_token',
+    ];
+
+    /**
      * Display the specified resource.
      *
      * @return  \App\Models\Provider

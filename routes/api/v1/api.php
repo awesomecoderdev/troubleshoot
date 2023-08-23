@@ -20,6 +20,8 @@ use App\Http\Controllers\Api\V1\HandymanBookingController;
 use App\Http\Controllers\Api\V1\ProviderBookingController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
 use App\Http\Controllers\Api\V1\ProviderHandymanController;
+use App\Models\Customer;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,11 +36,34 @@ use App\Http\Controllers\Api\V1\ProviderHandymanController;
 
 // V1 Base Route.
 Route::any('/', function (Request $request) {
-    return response()->json([
-        "success" => true,
-        "status" => 200,
-        "message" => "Troubleshoot API Version V0.1",
-    ]);
+    // $customer = Customer::first();
+    // Auth::login($customer);
+    // Auth::guard('customer')->login($customer);
+    // Auth::logout();
+
+    try {
+        $credentials = [
+            "email" => "rifat678@gmail.com",
+            "password" => "12345678"
+        ];
+
+        if (Auth::guard('customer')->attempt($credentials)) {
+            $request->session()->regenerate();
+        } else {
+            die("err");
+        }
+
+        return response()->json([
+            "success" => true,
+            "status" => 200,
+            "message" => "Troubleshoot API Version V0.1",
+            "data" => [
+                "customer" => Auth::user("customer")
+            ]
+        ]);
+    } catch (\Throwable $th) {
+        throw $th;
+    }
 });
 
 // Refresh the csrf token.
