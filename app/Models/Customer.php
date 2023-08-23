@@ -41,6 +41,7 @@ class Customer extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     /**
@@ -51,7 +52,6 @@ class Customer extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
-
 
     /**
      * Customer full name.

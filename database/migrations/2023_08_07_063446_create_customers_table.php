@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer("otp");
             $table->string("image")->nullable();
             $table->boolean("status")->default(false);
+            $table->rememberToken();
             $table->timestamps();
         });
     }
