@@ -15,6 +15,7 @@ use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreBookingRequest;
+use App\Http\Resources\Api\V1\CustomerResource;
 
 class CustomerBookingController extends Controller
 {
@@ -233,7 +234,7 @@ class CustomerBookingController extends Controller
 
             $booking->metadata = [
                 "service" => $service,
-                "customer" => $customer,
+                "customer" => new CustomerResource($customer),
                 "coupon" => $coupon,
                 "campaign" => $campaign,
                 "calculation" => $calculation
