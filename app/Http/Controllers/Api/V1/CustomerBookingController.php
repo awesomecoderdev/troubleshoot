@@ -84,7 +84,14 @@ class CustomerBookingController extends Controller
         try {
             // Get the user's id from token header and get his customer bookings
             $customer = $request->user("customers");
-            $booking = Booking::where("id", $request->booking_id)->where("status", "pending")->where("customer_id", $customer->id)->firstOrFail();
+            $booking = Booking::where("id", $request->booking_id)->when($request->status != null, function ($query) use ($request) {
+                if ($request->status == "cancelled") {
+                    $query->where("status", "pending");
+                } elseif ($request->status == "completed") {
+                    $query->where("status", "progressed");
+                }
+                $query->where("status", null);
+            })->where("customer_id", $customer->id)->firstOrFail();
 
             $booking->status = $request->status;
             $booking->save();
