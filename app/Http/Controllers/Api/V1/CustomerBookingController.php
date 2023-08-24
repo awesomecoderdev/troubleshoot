@@ -89,8 +89,9 @@ class CustomerBookingController extends Controller
                     $query->where("status", "pending");
                 } elseif ($request->status == "completed") {
                     $query->where("status", "progressed");
+                } else {
+                    $query->where("status", null);
                 }
-                $query->where("status", null);
             })->where("customer_id", $customer->id)->firstOrFail();
 
             $booking->status = $request->status;
