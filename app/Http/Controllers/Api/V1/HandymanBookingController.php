@@ -265,7 +265,7 @@ class HandymanBookingController extends Controller
     /**
      * Retrieve update info.
      */
-    public function duration(object $schedules)
+    public function duration($schedules)
     {
         try {
             $totalDuration = $schedules->map(function ($schedule) {
