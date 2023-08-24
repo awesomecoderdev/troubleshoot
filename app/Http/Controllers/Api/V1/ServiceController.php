@@ -111,11 +111,10 @@ class ServiceController extends Controller
                         ->get();
                 } else {
                     $services = Service::where('zone_id', $zone)
-                        ->where(function ($q) use ($query) {
-                            $q->where('name', 'like', "%{$query}%")
-                                ->orWhere('short_description', 'like', "%{$query}%")
-                                ->orWhere('long_description', 'like', "%{$query}%");
-                        })->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
+                        ->where('name', 'like', "%{$query}%")
+                        ->orWhere('short_description', 'like', "%{$query}%")
+                        ->orWhere('long_description', 'like', "%{$query}%")
+                        ->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
                     return Response::json([
                         'success'   => true,
                         'status'    => HTTP::HTTP_OK,

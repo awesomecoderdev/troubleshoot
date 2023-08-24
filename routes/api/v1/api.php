@@ -20,6 +20,8 @@ use App\Http\Controllers\Api\V1\HandymanBookingController;
 use App\Http\Controllers\Api\V1\ProviderBookingController;
 use App\Http\Controllers\Api\V1\ProviderServiceController;
 use App\Http\Controllers\Api\V1\ProviderHandymanController;
+use App\Models\Customer;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,15 +36,20 @@ use App\Http\Controllers\Api\V1\ProviderHandymanController;
 
 // V1 Base Route.
 Route::any('/', function (Request $request) {
+    // $customer = Customer::first();
+    // $token = $customer->createToken('authToken')->plainTextToken;
+    // Session::put("customer", $token);
+
     return response()->json([
         "success" => true,
         "status" => 200,
         "message" => "Troubleshoot API Version V0.1",
+        "data" => Session::all()
     ]);
 });
 
 // Refresh the csrf token.
-Route::any('/refresh-csrf', [CsrfTokenController::class, 'refresh'])->name('csrf.refresh');
+Route::any('/csrf', [CsrfTokenController::class, 'refresh'])->name('csrf.refresh');
 
 // Guest routes
 Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {

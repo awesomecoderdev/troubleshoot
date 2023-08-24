@@ -18,7 +18,8 @@ class CsrfTokenController extends Controller
         return Response::json([
             'success'   => true,
             'status'    => HTTP::HTTP_OK,
-            'token' => csrf_token()
+            "message"   => "Successfully Authorized."
+            // 'token' => csrf_token()
         ], HTTP::HTTP_OK); // HTTP::HTTP_OK
     }
 }
