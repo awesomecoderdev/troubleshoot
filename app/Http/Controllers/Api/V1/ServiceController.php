@@ -70,11 +70,13 @@ class ServiceController extends Controller
      */
     public function show(Request $request)
     {
+
+
         // get the search, popular, recommended services
         if (in_array($request->service, ["search", "popular", "recommended"])) {
             $zone = $request->zone_id;
-            $query = $request->query;
-            $params = Arr::only($request->input(), ["query", "zone_id", "per_page"]);
+            $search = $request->input("query");
+            $params = Arr::only($request->all(), ["query", "zone_id", "per_page"]);
 
             if ($request->service == "popular" || $request->service == "recommended") {
                 $validator = Validator::make($request->all(), [
@@ -96,7 +98,10 @@ class ServiceController extends Controller
                 ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
             }
 
+
+
             try {
+
                 if ($request->service == "recommended") {
                     $services = Service::where('zone_id', $request->get('zone_id'))
                         ->orderBy('avg_rating', 'desc')
@@ -104,25 +109,18 @@ class ServiceController extends Controller
                         ->limit(10)
                         ->get();
                 } elseif ($request->service == "popular") {
-                    $services = Service::where('zone_id', $request->get('zone_id'))
+                    $services = Service::where('zone_id', $request->input('zone_id'))
                         ->where('order_count', '>', 0)  // you might want to adjust this number
                         ->orderBy('order_count', 'desc')
                         ->limit(10)
                         ->get();
                 } else {
+
                     $services = Service::where('zone_id', $zone)
-                        ->where('name', 'like', "%{$query}%")
-                        ->orWhere('short_description', 'like', "%{$query}%")
-                        ->orWhere('long_description', 'like', "%{$query}%")
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('short_description', 'like', "%{$search}%")
+                        ->orWhere('long_description', 'like', "%{$search}%")
                         ->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
-                    return Response::json([
-                        'success'   => true,
-                        'status'    => HTTP::HTTP_OK,
-                        'message'   => "Successfully authorized.",
-                        'data'      => [
-                            'services'  => $services
-                        ]
-                    ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
                 }
 
                 return Response::json([
@@ -134,7 +132,7 @@ class ServiceController extends Controller
                     ]
                 ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
             } catch (\Exception $e) {
-                //throw $e;
+                // throw $e;
                 return Response::json([
                     'success'   => false,
                     'status'    => HTTP::HTTP_FORBIDDEN,
@@ -144,7 +142,7 @@ class ServiceController extends Controller
             }
         } else {
             try {
-                $service = Service::with(["provider", "reviews", "category"])->findOrFail($request->service);
+                $service = Service::with(["provider", "reviews", "category"])->where("id", $request->service)->firstOrFail();
                 return Response::json([
                     'success'   => true,
                     'status'    => HTTP::HTTP_OK,

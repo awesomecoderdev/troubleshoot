@@ -154,6 +154,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 // Services routes
 Route::group(["as" => "service.", 'prefix' => 'service', "controller" => ServiceController::class], function () {
     Route::get('/', 'index')->name("index");
+    // Route::get('/{service}', 'show')->name("show");
     Route::get('/{service}', 'show')->name("show");
     Route::get('/details/{service}', 'details')->name("details");
     Route::post('/review/{service}', 'review')->middleware("customer")->name("review");
