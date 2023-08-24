@@ -237,7 +237,8 @@ class HandymanBookingController extends Controller
                 ->firstOrFail();
 
 
-            $schedules = Schedule::where("booking_id", $booking->id)->get();
+            $schedules = Schedule::where("booking_id", $booking->id)->where("handyman_id", $handyman->id)->get();
+
 
             return Response::json([
                 'success'   => true,
@@ -245,7 +246,8 @@ class HandymanBookingController extends Controller
                 'message'   => "Successfully Authorized.",
                 "data"      => [
                     "schedules" => $schedules,
-                    // "booking" => $booking
+                    // "booking" => $booking,
+                    "duration" => $this->duration($schedules)
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
@@ -258,6 +260,40 @@ class HandymanBookingController extends Controller
             // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }
+
+
+    /**
+     * Retrieve update info.
+     */
+    public function duration(object $schedules)
+    {
+        try {
+            $totalDuration = $schedules->map(function ($schedule) {
+                $start = Carbon::parse($schedule->start);
+                $end = Carbon::parse($schedule->end);
+                $diff = $start->diff($end);
+                return $diff->format('%H:%I:%S');
+            })->reduce(function ($carry, $duration) {
+                $timeParts = explode(':', $duration);
+                $carry[0] += (int) $timeParts[0]; // hours
+                $carry[1] += (int) $timeParts[1]; // minutes
+                $carry[2] += (int) $timeParts[2]; // seconds
+                // Adjust carry values if seconds/minutes exceed 60
+                $carry[1] += floor($carry[2] / 60);
+                $carry[2] = $carry[2] % 60;
+                $carry[0] += floor($carry[1] / 60);
+                $carry[1] = $carry[1] % 60;
+                return $carry;
+            }, ["00", "00", "00"]);
+
+            list($hours, $minutes, $seconds) = $totalDuration;
+            return "$hours:$minutes:$seconds";
+        } catch (\Exception $e) {
+            //throw $e;
+            return "00:00:00";
+        }
+    }
+
 
     /**
      * Retrieve update info.
@@ -307,14 +343,19 @@ class HandymanBookingController extends Controller
             // end transaction
             DB::commit();
 
+
+
+            $schedules = Schedule::where("booking_id", $booking->id)->where("handyman_id", $handyman->id)->get();
+
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_CREATED,
                 'message'   => "Schedule successfully started.",
-                // "data"      => [
-                //     "schedules" => $schedule,
-                //     "booking" => $booking
-                // ]
+                "data"      => [
+                    // "schedules" => $schedule,
+                    // "booking" => $booking
+                    "duration" => $this->duration($schedules)
+                ]
             ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             throw $e;
@@ -372,14 +413,18 @@ class HandymanBookingController extends Controller
             // end transaction
             DB::commit();
 
+
+            $schedules = Schedule::where("booking_id", $booking->id)->where("handyman_id", $handyman->id)->get();
+
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Schedule successfully stopped.",
-                // "data"      => [
-                //     "schedules" => $schedule,
-                //     "booking" => $booking
-                // ]
+                "data"      => [
+                    // "schedules" => $schedule,
+                    // "booking" => $booking,
+                    "duration" => $this->duration($schedules)
+                ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             throw $e;

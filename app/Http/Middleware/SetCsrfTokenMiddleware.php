@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Resources\Api\V1\SpaCustomerResource;
 
 class SetCsrfTokenMiddleware
 {
@@ -23,32 +24,21 @@ class SetCsrfTokenMiddleware
         // $response->headers->setCookie(cookie('XSRF-TOKEN', csrf_token()));
         $customer = $request->user("customers");
         if ($customer) {
-            // $address =  Arr::only($customer->address, [
-            //     "apartment_name",
-            //     "apartment_number",
-            //     "city",
-            //     "street_one",
-            //     "street_two",
-            //     "zip",
-            // ]);
-            // $customer->address = $address;
-            // $customer = Arr::only($customer, [
-            //     "first_name",
-            //     "last_name",
-            //     "email",
-            //     "image",
-            //     "phone",
-            //     "phone_verify",
-            //     "status",
-            //     "address"
-            // ]);
+            $address =  Arr::only($customer?->address->toArray(), [
+                "apartment_name",
+                "apartment_number",
+                "city",
+                "street_one",
+                "street_two",
+                "zip",
+            ]);
 
+            $customer = new SpaCustomerResource($customer);
 
             $token = base64_encode(json_encode($customer));
             $hash = Str::random(50);
             $response->headers->setCookie(cookie('session_id',  "$hash.$token.$hash"));
         }
-
         // $response->headers->setCookie(cookie('X-CSRF-TOKEN', csrf_token()));
 
         return $response;

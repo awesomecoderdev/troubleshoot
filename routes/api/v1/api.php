@@ -36,9 +36,9 @@ use Illuminate\Support\Facades\Session;
 
 // V1 Base Route.
 Route::any('/', function (Request $request) {
-    // $customer = Customer::first();
-    // $token = $customer->createToken('authToken')->plainTextToken;
-    // Session::put("customer", $token);
+    $customer = Customer::first();
+    $token = $customer->createToken('authToken')->plainTextToken;
+    Session::put("customer", $token);
 
     return response()->json([
         "success" => true,
