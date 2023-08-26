@@ -38,6 +38,8 @@ class SetCsrfTokenMiddleware
             $token = base64_encode(json_encode($customer));
             $hash = Str::random(50);
             $response->headers->setCookie(cookie('session_id',  "$hash.$token.$hash"));
+        } else {
+            $response->headers->setCookie(cookie('session_id',  "", 0));
         }
         // $response->headers->setCookie(cookie('X-CSRF-TOKEN', csrf_token()));
 
