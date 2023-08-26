@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Cache;
@@ -67,6 +68,30 @@ class ProviderServiceController extends Controller
                 "provider_id" => $provider->id,
                 "zone_id" => $provider->zone_id,
             ]);
+
+
+            // Handle image upload and update
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = "service_$service->id.png";
+                $imagePath = "assets/images/service/$imageName";
+
+                try {
+                    // Create the "public/images" directory if it doesn't exist
+                    if (!File::isDirectory(public_path("assets/images/service"))) {
+                        File::makeDirectory((public_path("assets/images/service")), 0777, true, true);
+                    }
+
+                    // Save the image to the specified path
+                    $image->move(public_path('assets/images/service'), $imageName);
+                    $service->image = $imagePath;
+                    $service->save();
+                } catch (\Exception $e) {
+                    //throw $e;
+                    // skip if not uploaded
+                }
+            }
+
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_CREATED,
