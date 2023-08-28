@@ -70,8 +70,6 @@ class ServiceController extends Controller
      */
     public function show(Request $request)
     {
-
-
         // get the search, popular, recommended services
         if (in_array($request->service, ["search", "popular", "recommended"])) {
             $zone = $request->zone_id;
@@ -99,24 +97,23 @@ class ServiceController extends Controller
             }
 
 
-
             try {
 
                 if ($request->service == "recommended") {
-                    $services = Service::where('zone_id', $request->get('zone_id'))
+                    $services = Service::with("provider")->where('zone_id', $request->get('zone_id'))
                         ->orderBy('avg_rating', 'desc')
                         ->orderBy('created_at', 'desc')  // fallback to newest if ratings are equal
                         ->limit(10)
                         ->get();
                 } elseif ($request->service == "popular") {
-                    $services = Service::where('zone_id', $request->input('zone_id'))
+                    $services = Service::with("provider")->where('zone_id', $request->input('zone_id'))
                         ->where('order_count', '>', 0)  // you might want to adjust this number
                         ->orderBy('order_count', 'desc')
                         ->limit(10)
                         ->get();
                 } else {
 
-                    $services = Service::where('zone_id', $zone)
+                    $services = Service::with("provider")->where('zone_id', $zone)
                         ->where('name', 'like', "%{$search}%")
                         ->orWhere('short_description', 'like', "%{$search}%")
                         ->orWhere('long_description', 'like', "%{$search}%")
