@@ -178,6 +178,7 @@ class ProviderController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'phone' => $request->phone,
+                'address' => $request->address,
                 "identity_number" => $request->identity_number,
                 "contact_person_name" => $request->contact_person_name,
                 "contact_person_phone" => $request->contact_person_phone,
