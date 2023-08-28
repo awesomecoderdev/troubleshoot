@@ -36,6 +36,7 @@ class UpdateProviderRequest extends FormRequest
             'phone' => "required|min:10|max:15|unique:providers,phone,$provider->id",
             'email' => "required|max:100|unique:providers,email,$provider->id",
             'password' => 'required|string|min:6|max:10',
+            // 'address' => "required|string",
             // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'boolean', // Validate status field
         ];

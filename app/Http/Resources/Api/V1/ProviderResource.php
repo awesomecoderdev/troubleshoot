@@ -58,6 +58,7 @@ class ProviderResource extends JsonResource
             "email",
             // "password",
             "phone",
+            "address",
             "identity_number",
             "contact_person_name",
             "contact_person_phone",

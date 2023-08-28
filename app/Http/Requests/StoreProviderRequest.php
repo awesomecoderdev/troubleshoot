@@ -36,6 +36,7 @@ class StoreProviderRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('providers')], //unique:users,email
             'phone' => ['required', 'string', "min:10", "max:20", Rule::unique('providers')],
             'password' => 'required|string|min:6|max:8',
+            'address' => "required|string",
             "identity_number" => "required",
             "contact_person_name" => 'required|string|max:255',
             "contact_person_phone" => "required|string|min:10|max:20",
