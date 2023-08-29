@@ -112,8 +112,7 @@ class ServiceController extends Controller
                         ->limit(10)
                         ->get();
                 } else {
-
-                    $services = Service::with("provider")->where('zone_id', $zone)
+                    $services = Service::where('zone_id', $zone)->with("provider")
                         ->where('name', 'like', "%{$search}%")
                         ->orWhere('short_description', 'like', "%{$search}%")
                         ->orWhere('long_description', 'like', "%{$search}%")
