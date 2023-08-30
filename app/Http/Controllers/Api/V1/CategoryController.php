@@ -41,6 +41,9 @@ class CategoryController extends Controller
                 ->when($request->zone_id != null, function ($query) use ($request) {
                     return $query->where("zone_id", $request->zone_id);
                 })
+                ->when($request->filled("featured"), function ($query) use ($request) {
+                    return $query->where("is_featured", true);
+                })
                 ->where("is_active", true)
                 ->get();
 
