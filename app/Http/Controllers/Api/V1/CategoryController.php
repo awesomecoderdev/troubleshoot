@@ -93,7 +93,7 @@ class CategoryController extends Controller
             }
         } else {
             $validator = Validator::make($request->all(), [
-                'zone_id' => 'required||exists:zones,id',
+                'zone_id' => 'integer|exists:zones,id',
             ]);
 
             if ($validator->fails()) {
@@ -106,10 +106,13 @@ class CategoryController extends Controller
             }
 
             try {
-                $categories = Category::where('parent_id', 0)
+                $categories = Category::where('parent_id', "!=", 0)
                     ->where("id", $request->category)
                     ->when($request->zone_id != null, function ($query) use ($request) {
                         return $query->where("zone_id", $request->zone_id);
+                    })
+                    ->when($request->filled("services"), function ($query) use ($request) {
+                        return $query->with(["services"]);
                     })
                     ->where("is_active", true)
                     ->firstOrFail();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Service;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
@@ -51,5 +52,16 @@ class Category extends Model
     public function subcategories()
     {
         return $this->hasMany(Category::class, 'parent_id', 'id');
+    }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Service
+     */
+    public function services()
+    {
+        return $this->hasMany(Service::class);
     }
 }
