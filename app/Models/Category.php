@@ -42,4 +42,14 @@ class Category extends Model
             // set: fn ($value) => strtolower($value),
         );
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Category
+     */
+    public function subcategories()
+    {
+        return $this->hasMany(Category::class, 'parent_id', 'id');
+    }
 }

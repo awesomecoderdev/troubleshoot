@@ -44,6 +44,9 @@ class CategoryController extends Controller
                 ->when($request->filled("featured"), function ($query) use ($request) {
                     return $query->where("is_featured", true);
                 })
+                ->when($request->filled("subcategories"), function ($query) use ($request) {
+                    return $query->with(["subcategories"]);
+                })
                 ->where("is_active", true)
                 ->get();
 
