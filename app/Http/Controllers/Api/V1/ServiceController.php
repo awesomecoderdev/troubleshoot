@@ -45,7 +45,7 @@ class ServiceController extends Controller
 
         try {
             $params = Arr::only($request->input(), ["category_id", "zone_id"]);
-            $services = Service::where('category_id', $category)->where('zone_id', $zone)->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
+            $services = Service::with(["provider", "category", "zone"])->where('category_id', $category)->where('zone_id', $zone)->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
@@ -100,19 +100,19 @@ class ServiceController extends Controller
             try {
 
                 if ($request->service == "recommended") {
-                    $services = Service::with("provider")->where('zone_id', $request->get('zone_id'))
+                    $services = Service::with(["provider", "category", "zone"])->where('zone_id', $request->get('zone_id'))
                         ->orderBy('avg_rating', 'desc')
                         ->orderBy('created_at', 'desc')  // fallback to newest if ratings are equal
                         ->limit(10)
                         ->get();
                 } elseif ($request->service == "popular") {
-                    $services = Service::with("provider")->where('zone_id', $request->input('zone_id'))
+                    $services = Service::with(["provider", "category", "zone"])->where('zone_id', $request->input('zone_id'))
                         ->where('order_count', '>', 0)  // you might want to adjust this number
                         ->orderBy('order_count', 'desc')
                         ->limit(10)
                         ->get();
                 } else {
-                    $services = Service::where('zone_id', $zone)->with("provider")
+                    $services = Service::where('zone_id', $zone)->with(["provider", "category", "zone"])
                         ->where('name', 'like', "%{$search}%")
                         ->orWhere('short_description', 'like', "%{$search}%")
                         ->orWhere('long_description', 'like', "%{$search}%")
@@ -138,7 +138,7 @@ class ServiceController extends Controller
             }
         } else {
             try {
-                $service = Service::with(["provider", "reviews", "category"])->where("id", $request->service)->firstOrFail();
+                $service = Service::with(["provider", "reviews", "category", "zone"])->where("id", $request->service)->firstOrFail();
                 return Response::json([
                     'success'   => true,
                     'status'    => HTTP::HTTP_OK,

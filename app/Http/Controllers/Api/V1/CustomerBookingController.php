@@ -138,6 +138,7 @@ class CustomerBookingController extends Controller
             $coupon = Coupon::where("provider_id", $service->provider_id)->where("code", $request->input("coupon", 0))->first();
             $campaign = Campaign::where("id", $request->input("campaign_id", 0))->first();
             $service = Service::where("id", $request->service_id)->firstOrFail();
+            $quantity = $request->input("quantity", 1);
 
             if ($request->filled("schedule")) {
                 if ($request->schedule < date("Y-m-d", strtotime($today))) {
@@ -167,8 +168,9 @@ class CustomerBookingController extends Controller
             if ($coupon && $coupon->end >= $today) { // with coupon
                 // coupon minimum amount
                 if ($withTax < $coupon->min_amount) {
-                    $totalAmount = $withTax;
                     $totalDiscount = $discount;
+                    $subtotal = $withTax;
+                    $totalAmount = $quantity * $subtotal;
                     $calculation = [
                         "price" => $price,
                         "discount" => $discount,
@@ -179,6 +181,7 @@ class CustomerBookingController extends Controller
                         "with_tax" => $withTax,
                         "with_coupon" => $totalAmount,
                         "without_coupon" => $withTax,
+                        "subtotal" => $subtotal,
                         "total_amount" => $totalAmount,
                     ];
                     $errors = [
@@ -190,8 +193,9 @@ class CustomerBookingController extends Controller
                     ];
                 } else {
                     // with coupon
-                    $totalAmount = $withTax - $coupon->discount;
                     $totalDiscount = $discount + $coupon->discount;
+                    $subtotal = $withTax - $coupon->discount;
+                    $totalAmount = $quantity * $subtotal;
                     $calculation = [
                         "price" => $price,
                         "discount" => $discount,
@@ -202,12 +206,14 @@ class CustomerBookingController extends Controller
                         "with_tax" => $withTax,
                         "with_coupon" => $totalAmount,
                         "without_coupon" => $withTax,
+                        "subtotal" => $subtotal,
                         "total_amount" => $totalAmount,
                     ];
                 }
             } else { // without coupon
-                $totalAmount = $withTax;
                 $totalDiscount = $discount;
+                $subtotal = $withTax;
+                $totalAmount = $quantity * $subtotal;
 
                 $calculation = [
                     "price" => $price,
@@ -219,6 +225,7 @@ class CustomerBookingController extends Controller
                     "with_tax" => $withTax,
                     "with_coupon" => $totalAmount,
                     "without_coupon" => $withTax,
+                    "subtotal" => $subtotal,
                     "total_amount" => $totalAmount,
                 ];
                 $errors = [
@@ -246,6 +253,7 @@ class CustomerBookingController extends Controller
             $booking->service_id = $service->id;
             $booking->provider_id = $service->provider_id;
             $booking->hint = $request->hint;
+            $booking->quantity = $request->quantity;
 
             $booking->metadata = [
                 "service" => $service,
@@ -346,6 +354,7 @@ class CustomerBookingController extends Controller
 
         $validator = Validator::make($request->all(), [
             'service_id' => 'required|integer|exists:services,id',
+            'quantity'   => "integer"
         ]);
 
         if ($validator->fails()) {
@@ -364,7 +373,7 @@ class CustomerBookingController extends Controller
             $today = Carbon::today();
             $service = Service::where("id", $request->service_id)->firstOrFail();
             $coupon = Coupon::where("provider_id", $service->provider_id)->where("code", $request->input("coupon", 0))->where("end", '>=', $today)->first();
-
+            $quantity = $request->input("quantity", 1);
             // data
             $price = intval($service->price);
             $discount = intval($service->discount);
@@ -380,7 +389,8 @@ class CustomerBookingController extends Controller
             if ($coupon) {
                 // coupon minimum amount
                 if ($withTax < $coupon->min_amount) {
-                    $totalAmount = $withTax;
+                    $subtotal = $withTax;
+                    $totalAmount = $quantity * $subtotal;
                     return Response::json([
                         'success'   => true,
                         'status'    => HTTP::HTTP_OK,
@@ -395,6 +405,7 @@ class CustomerBookingController extends Controller
                             "with_tax" => $withTax,
                             "with_coupon" => $totalAmount,
                             "without_coupon" => $withTax,
+                            "subtotal" => $subtotal,
                             "total_amount" => $totalAmount,
                             "coupon" => $coupon,
                             "service" => $service
@@ -407,8 +418,9 @@ class CustomerBookingController extends Controller
                     ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
                 } else {
                     // with coupon
-                    $totalAmount = $withTax - $coupon->discount;
                     $totalDiscount = $discount + $coupon->discount;
+                    $subtotal = $withTax - $coupon->discount;
+                    $totalAmount = $quantity * $subtotal;
                     return Response::json([
                         'success'   => true,
                         'status'    => HTTP::HTTP_OK,
@@ -423,6 +435,7 @@ class CustomerBookingController extends Controller
                             "with_tax" => $withTax,
                             "with_coupon" => $totalAmount,
                             "without_coupon" => $withTax,
+                            "subtotal" => $subtotal,
                             "total_amount" => $totalAmount,
                             "coupon" => $coupon,
                             "service" => $service
@@ -430,7 +443,8 @@ class CustomerBookingController extends Controller
                     ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
                 }
             } else {
-                $totalAmount = $withTax;
+                $subtotal = $withTax;
+                $totalAmount = $quantity * $subtotal;
                 return Response::json([
                     'success'   => true,
                     'status'    => HTTP::HTTP_OK,
@@ -445,6 +459,7 @@ class CustomerBookingController extends Controller
                         "with_tax" => $withTax,
                         "with_coupon" => $totalAmount,
                         "without_coupon" => $withTax,
+                        "subtotal" => $subtotal,
                         "total_amount" => $totalAmount,
                         "coupon" => $coupon,
                         "service" => $service

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Zone;
 use App\Models\Review;
 use App\Models\Category;
 use App\Models\Provider;
@@ -47,6 +48,8 @@ class Service extends Model
      */
     protected $hidden = [
         'password',
+        // "created_at",
+        // "updated_at"
     ];
 
     /**
@@ -76,6 +79,16 @@ class Service extends Model
     public function provider()
     {
         return $this->belongsTo(Provider::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Zone
+     */
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class)->where("status", true);
     }
 
     /**

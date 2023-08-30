@@ -17,4 +17,14 @@ class Address extends Model
     protected $fillable = [
         "*"
     ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        "created_at",
+        "updated_at"
+    ];
 }

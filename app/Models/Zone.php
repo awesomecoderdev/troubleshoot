@@ -21,6 +21,18 @@ class Zone extends Model
         "*"
     ];
 
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        "coordinates",
+        "created_at",
+        "updated_at"
+    ];
+
     /**
      * Display the specified resource.
      *
@@ -28,7 +40,7 @@ class Zone extends Model
      */
     public function campaigns()
     {
-        return $this->hasMany(Campaign::class)->where('end', '>=', Carbon::now())->orderBy('created_at', 'desc');
+        return $this->hasMany(Campaign::class)->where("end", ">=", Carbon::now())->orderBy("created_at", "desc");
     }
 
     /**
@@ -38,7 +50,7 @@ class Zone extends Model
      */
     public function categories()
     {
-        return $this->hasMany(Category::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(Category::class)->orderBy("created_at", "desc");
     }
 
     /**
@@ -48,6 +60,6 @@ class Zone extends Model
      */
     public function services()
     {
-        return $this->hasMany(Service::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(Service::class)->orderBy("created_at", "desc");
     }
 }
