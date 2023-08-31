@@ -106,8 +106,7 @@ class CategoryController extends Controller
             }
 
             try {
-                $categories = Category::where('parent_id', "!=", 0)
-                    ->where("id", $request->category)
+                $categories = Category::where("id", $request->category)
                     ->when($request->zone_id != null, function ($query) use ($request) {
                         return $query->where("zone_id", $request->zone_id);
                     })
