@@ -135,6 +135,21 @@ class Service extends Model
     // }
 
     /**
+     * Interact with the user's avg_rating.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function avgRating(): Attribute
+    {
+        $ratings = $this->reviews()->pluck('review_rating')->toArray();
+        $averageRating = collect($ratings)->average();
+        return Attribute::make(
+            get: fn ($value) => is_null($value) ? $averageRating :  $value,
+            // set: fn ($value) => strtolower($value),
+        );
+    }
+
+    /**
      * Interact with the image.
      *
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
