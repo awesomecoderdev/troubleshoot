@@ -139,6 +139,7 @@ class CustomerBookingController extends Controller
             $campaign = Campaign::where("id", $request->input("campaign_id", 0))->first();
             $service = Service::where("id", $request->service_id)->firstOrFail();
             $quantity = $request->input("quantity", 1);
+            $quantity = $quantity < 1 ? 1 : $quantity;
 
             if ($request->filled("schedule")) {
                 if ($request->schedule < date("Y-m-d", strtotime($today))) {
