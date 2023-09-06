@@ -253,7 +253,7 @@ class CustomerBookingController extends Controller
             $booking->service_id = $service->id;
             $booking->provider_id = $service->provider_id;
             $booking->hint = $request->hint;
-            $booking->quantity = $request->quantity;
+            $booking->quantity = $quantity;
 
             $booking->metadata = [
                 "service" => $service,
