@@ -35,7 +35,7 @@ class StoreBookingRequest extends FormRequest
             "coupon" => "nullable|string",
             // "handyman_id" => "nullable|exists:handymen,id",
             // "campaign_id" => "nullable|exists:campaigns,id",
-            "service_id" => "required|exists:services,id",
+            // "service_id" => "required|exists:services,id",
             // "category_id" => "required|exists:categories,id",
             // "zone_id" => "required|exists:zones,id",
             // "status" => "in:pending,accepted,rejected,progressing,completed",
